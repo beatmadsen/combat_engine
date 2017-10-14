@@ -36,4 +36,11 @@ module CombatEngine
       @target.apply_damage(@damage)
     end
   end
+
+  class ApplyDemoTankEffectAction < Action
+    def apply_effect
+      # TODO: find a cleaner way for this.
+      @target.apply_effect(DemoTankEffect.new(source: @source, target: @target))
+    end
+  end
 end

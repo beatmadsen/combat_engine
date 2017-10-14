@@ -1,4 +1,9 @@
 module CombatEngine
+  # TODO:
+  # it would make sense to talk about different kinds of effects
+  # depending on where their lifecycle is managed,
+  # i.e. which object invokes the effect's callbacks
+
   # Stages/Modes:
   # 1: Before Battle
   # 1.n: Before player added
@@ -21,12 +26,9 @@ module CombatEngine
   # 2.n: After action
   #
   # 3: After Battle
-  class Effect
-    def initialize(source:, target:)
-      @source = source
-      @target = target
-    end
 
+  # Effect whose lifecycle is managed by battle state
+  class BattleEffect
     def before_battle(**options)
     end
 
@@ -46,6 +48,17 @@ module CombatEngine
     end
 
     def after_participant_added(**options)
+    end
+
+    def after_battle(**options)
+    end
+  end
+
+  # Effect whose lifecycle is managed by associated character
+  class CharacterEffect
+    def initialize(source:, target:)
+      @source = source
+      @target = target
     end
 
     def before_action(**options)
@@ -84,13 +97,14 @@ module CombatEngine
 
   # Example: Reduce damage on team members confering some on tank
   # source is tank. One instance for each team member. Target is team member
-  class DemoTankEffect < Effect
+  class DemoTankEffect < CharacterEffect
     def before_damage(**options)
       amount = options[:amount]
 
       # '_now' suffix indicates bypassing of callbacks
       @source.apply_damage_now(amount)
 
+      # TODO: indicates that player has internal battle damage state machine
       @target.reduce_next_damage(amount)
     end
   end
