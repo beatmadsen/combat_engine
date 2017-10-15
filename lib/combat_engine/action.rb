@@ -20,9 +20,6 @@ module CombatEngine
 
     def apply_healing; end
 
-    # TODO:
-    # some effects might need access to all players in battle
-    # like tank effect 'reduce damage on group and transfer damage to self'
     def apply_effect; end
   end
 

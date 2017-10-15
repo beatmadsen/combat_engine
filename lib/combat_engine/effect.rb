@@ -55,6 +55,10 @@ module CombatEngine
   end
 
   # Effect whose lifecycle is managed by associated character
+  # TODO:
+  # Idea: maybe all effects' lifecycles should be managed by battle state.
+  # That way the character objects only have to fullfill the contract
+  # of actually applying the end result after calculating damage.
   class CharacterEffect
     def initialize(source:, target:)
       @source = source
