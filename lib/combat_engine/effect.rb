@@ -28,7 +28,12 @@ module CombatEngine
   # 3: After Battle
 
   # Effect whose lifecycle is managed by battle state
-  class BattleEffect
+  class Effect
+    def initialize(source:, target:)
+      @source = source
+      @target = target
+    end
+
     def before_battle(**options)
     end
 
@@ -51,18 +56,6 @@ module CombatEngine
     end
 
     def after_battle(**options)
-    end
-  end
-
-  # Effect whose lifecycle is managed by associated character
-  # TODO:
-  # Idea: maybe all effects' lifecycles should be managed by battle state.
-  # That way the character objects only have to fullfill the contract
-  # of actually applying the end result after calculating damage.
-  class CharacterEffect
-    def initialize(source:, target:)
-      @source = source
-      @target = target
     end
 
     def before_action(**options)
@@ -101,7 +94,7 @@ module CombatEngine
 
   # Example: Reduce damage on team members confering some on tank
   # source is tank. One instance for each team member. Target is team member
-  class DemoTankEffect < CharacterEffect
+  class DemoTankEffect < Effect
     def before_damage(**options)
       amount = options[:amount]
 
