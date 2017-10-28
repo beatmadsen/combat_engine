@@ -3,7 +3,7 @@ require 'set'
 module CombatEngine
   module EffectsRunner
     class BattleState
-      def initialize(effects: Set.new)
+      def initialize(effects: [])
         @effects = effects
         @next_state = self
       end
@@ -32,10 +32,12 @@ module CombatEngine
 
       # TODO: repeat this pattern for all callbacks for all effect runners
       def before_battle(**options)
+        # TODO: this pattern is needed so many places. Could extract a class that does the iteration with a specified callback
         @effects.each do |e|
           e.before_battle(options)
         end
       end
+
 
       def before_participant_added(**options)
       end

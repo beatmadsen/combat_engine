@@ -1,39 +1,29 @@
 module CombatEngine
   module EffectsRunner
-    class Character
+    class Permanent
+    end
+
+    # Responsible for executing effects,
+    # not keeping track of whether they still apply.
+    class Anytime
       def initialize
-        @anytime = Anytime.new
-        @battle = Battle.new
-        @permanent = Permanent.new
-        @wearable = Wearable.new
+        @effects = []
       end
 
       def add_effect(e)
-        runner(e).add_effect(e)
+        @effects << e
       end
 
       def remove_effect(e)
-        runner(e).remove_effect(e)
+        # TODO
       end
 
       def update(elapsed_time)
-        [@anytime, @battle, @permanent, @wearable].each do |r|
-          r.update(elapsed_time)
-        end
-      end
-
-      private
-
-      def runner(e)
-        case e.type
-        when :anytime
-          @anytime
-        when :battle
-          @battle
-        when :permanent
-          @permanent
-        when :wearable
-          @wearable
+        @effects.each do |e|
+          e.update(elapsed_time) do
+            # on effect complete
+            @effects.remove(e)
+          end
         end
       end
     end
