@@ -1,31 +1,26 @@
 module CombatEngine
-  module EffectsRunner
-    class Permanent
+  class Controller
+    def fire(action_key:, source:, target:)
+      klass = lookup_action_class(action_key)
+      action = klass.new(source: source, target: target)
+      Service.fire_action(action)
     end
 
-    # Responsible for executing effects,
-    # not keeping track of whether they still apply.
-    class Anytime
-      def initialize
-        @effects = []
-      end
+    private
 
-      def add_effect(e)
-        @effects << e
+    def lookup_action_class(action_key)
+      case action_key
+      when :meelee_attack
+        Action::MeleeAttack
+      else
+        Action::Noop
       end
+    end
+  end
 
-      def remove_effect(e)
-        # TODO
-      end
-
-      def update(elapsed_time)
-        @effects.each do |e|
-          e.update(elapsed_time) do
-            # on effect complete
-            @effects.remove(e)
-          end
-        end
-      end
+  class Service
+    # TODO - schedule it
+    def self.fire_action(action)
     end
   end
 end
