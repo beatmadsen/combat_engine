@@ -1,8 +1,17 @@
 module CombatEngine
   class Controller
-    def fire(action_key:, source:, target:)
+    def fire(action_key:, source:, targets:)
       klass = lookup_action_class(action_key)
-      action = klass.new(source: source, target: target)
+
+      # Look up all battles by source and targets.
+      # If more than one unique is found, then stop.
+      return if Battle::Service.conflict?(targets + [source])
+
+      battle = Battle::Service.find_or_create(source: source, targets: targets)
+      action = klass.new(source: source, targets: targets)
+
+      # TODO: wouldn't this already be taken into account above?
+      return unless action.valid_for_battle?(battle)
       ActionRunner.enqueue(action)
     end
 
