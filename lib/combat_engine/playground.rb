@@ -3,7 +3,7 @@ module CombatEngine
     def fire(action_key:, source:, target:)
       klass = lookup_action_class(action_key)
       action = klass.new(source: source, target: target)
-      Service.fire_action(action)
+      ActionRunner.enqueue(action)
     end
 
     private
@@ -18,9 +18,25 @@ module CombatEngine
     end
   end
 
-  class Service
-    # TODO - schedule it
-    def self.fire_action(action)
+  class ActionRunner
+    class << self
+      def enqueue(action)
+        queue.push(action)
+      end
+
+      def update(_elapsed_time)
+        while (action = queue.shift)
+          action.apply_damage
+          action.apply_healing
+          action.apply_effect
+        end
+      end
+
+      private
+
+      def queue
+        @_queue ||= []
+      end
     end
   end
 end
