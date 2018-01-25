@@ -1,5 +1,20 @@
 # CombatEngine top-level comment bla
 module CombatEngine
+  # Test-driven roadmap:
+  # -----------------
+  # Step 1: (✓)
+  # Heal someone outside of battle
+  #
+  # Step 2: (✗)
+  # Attack somone and trigger battle
+  #
+  # Step 3: (✗)
+  # Attack somone who is already in battle and join that battle
+  #
+  # Step 4: (✗)
+  # Make battle resolution rules pluggable
+  # -----------------
+
   # Simplest idea:
   # -----------------
   # Friendly actions cannot initiate battles,

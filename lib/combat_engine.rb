@@ -1,8 +1,7 @@
-require 'combat_engine/version'
-require 'combat_engine/character'
-require 'combat_engine/action/action_runner'
-require 'combat_engine/action/action'
-require 'combat_engine/playground'
+
+Dir[
+  File.join(__dir__, 'combat_engine', '**', '*.rb')
+].each { |file| require file }
 
 # CombatEngine does bla TODO
 module CombatEngine
