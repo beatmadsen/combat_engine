@@ -11,6 +11,13 @@ RSpec.describe CombatEngine::Character do
           subject.update(1)
         end.to change { target.hp }.by 1
       end
+
+      it 'can attack target and trigger a battle' do
+        expect do
+          subject.fire_action(action_name: :demo_attack, target: target)
+          subject.update(33)
+        end.to change { target.battle }.from(nil).to(Battle)
+      end
     end
   end
 end
