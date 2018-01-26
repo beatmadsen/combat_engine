@@ -6,7 +6,12 @@ module CombatEngine
   # Heal someone outside of battle
   #
   # Step 2: (✗)
-  # Attack somone and trigger battle
+  #
+  #   Step 2.1: (✓)
+  #   Attack someone and trigger battle
+  #
+  #   Step 2.2: (✗)
+  #   Launch an area attack with 3 targets and trigger battle
   #
   # Step 3: (✗)
   # Attack somone who is already in battle and join that battle

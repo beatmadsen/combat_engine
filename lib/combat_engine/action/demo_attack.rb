@@ -2,9 +2,10 @@ module CombatEngine
   # Action module contains TODO
   module Action
     # A simple action to demo healing
-    class DemoHealAction < Base
+    class DemoAttack < Base
       def execute
-        @target.heal_hp(1)
+        @target.start_battle(opponents: [@source])
+        @target.damage_hp(1)
       end
     end
   end
