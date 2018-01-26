@@ -17,7 +17,19 @@ module CombatEngine
   # Attack somone who is already in battle and join that battle
   #
   # Step 4: (✗)
+  # End battle when all opponents have zero hp
+  #
+  # Step 5: (✗)
+  # Battle with 3 teams
+  #
+  # Step 6: (✗)
+  # Schedule a DOT effect
+  #
+  # Step n-1: (✗)
   # Make battle resolution rules pluggable
+  #
+  # Step n: (✗)
+  # Make action lookup pluggable
   # -----------------
 
   # Simplest idea:

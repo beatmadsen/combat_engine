@@ -1,19 +1,21 @@
 module CombatEngine
   # Character does bla TODO
   class Character
-    attr_reader :hp, :battle
+    attr_reader :hp
 
     def initialize
       @hp = 100
       @action_runner = Action::Runner.new
     end
 
-    def fire_action(action_name:, target:)
+    def fire_action(action_name:, **options)
       action = case action_name
                when :demo_heal
-                 Action::DemoHeal.new(source: self, target: target)
+                 Action::DemoHeal.new(source: self, target: options[:target])
                when :demo_attack
-                 Action::DemoAttack.new(source: self, target: target)
+                 Action::DemoAttack.new(source: self, target: options[:target])
+               when :demo_aoe_attack
+                 Action::DemoAoeAttack.new(source: self, targets: options[:targets])
                end
       @action_runner.enqueue(action)
     end
@@ -27,7 +29,11 @@ module CombatEngine
     end
 
     def start_battle(opponents: [])
-      @battle = Battle.new(teams: [[self], opponents])
+      Battle.start(teams: [[self], opponents])
+    end
+
+    def battle
+      Battle.lookup(character: self)
     end
 
     def update(elapsed_time)
