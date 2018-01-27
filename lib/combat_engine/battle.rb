@@ -9,25 +9,34 @@ module CombatEngine
         @battles.find { |b| b.participant?(character) }
       end
 
-      # idempotent: does nothing if mathing battle already exists
-      def start(teams:)
+      #  idempotent: does nothing if mathing battle already exists
+      def start_or_join(teams:)
         # TODO: write test where this logic doesn't match requirement
-        # TODO: refactor!!!
-        teams.each do |team|
-          team.each do |member|
-            return if lookup(character: member)
-          end
+        battles = teams.flatten.map do |member|
+          lookup(character: member)
+        end.compact
+
+        if battles.one?
+          battles.first.add_participants(**teams)
+        elsif battles.empty?
+          @battles << new(teams: teams)
+        else
+          raise 'suggested teams have members in multiple battles'
         end
-        @battles << new(teams: teams)
       end
     end
 
-    def initialize(teams: [[], []])
-      @teams = teams
+    def initialize(teams: {})
+      @teams = Hash.new { |hash, key| hash[key] = Set.new }
+      add_participants(**teams)
     end
 
     def participant?(character)
-      @teams.any? { |team| team.include?(character) }
+      @teams[character.team].include?(character)
+    end
+
+    def add_participants(**teams)
+      teams.each { |team, members| @teams[team].concat(members) }
     end
 
     def update(elapsed_time); end

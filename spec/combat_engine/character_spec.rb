@@ -1,7 +1,5 @@
-require 'spec_helper'
-
 RSpec.describe CombatEngine::Character do
-  context 'when outside of battle' do
+  context 'when subject outside of battle' do
     context 'when we have a target' do
       let(:target) { described_class.new }
       context 'when healing target' do
@@ -14,27 +12,56 @@ RSpec.describe CombatEngine::Character do
         end
       end
 
-      context 'when attacking target' do
-        def do_attack
-          subject.fire_action(action_name: :demo_attack, target: target)
-          subject.update(33)
-        end
-
-        it 'triggers a battle' do
-          expect { do_attack }.to(
-            change { subject.battle }
+      def do_attack
+        subject.fire_action(action_name: :demo_attack, target: target)
+        subject.update(33)
+      end
+      context 'when target is not in battle' do
+        context 'when attacking target' do
+          it 'triggers a battle' do
+            expect { do_attack }.to(
+              change { subject.battle }
               .from(nil)
               .to(CombatEngine::Battle)
-          )
+            )
+          end
+
+          it 'adds target to subject\'s battle' do
+            do_attack
+            expect(target.battle).to eq(subject.battle)
+          end
+
+          it 'does damage' do
+            expect { do_attack }.to change { target.hp }.by(-1)
+          end
+        end
+      end
+
+      context 'when target is already in battle' do
+        let(:friend) { described_class.new }
+
+        before do
+          friend.fire_action(action_name: :demo_attack, target: target)
+          friend.update(100)
         end
 
-        it 'adds target to character\'s battle' do
-          do_attack
-          expect(target.battle).to eq(subject.battle)
-        end
+        context 'when attacking target' do
+          it 'puts subject in battle' do
+            expect { do_attack }.to(
+              change { subject.battle }
+              .from(nil)
+              .to(CombatEngine::Battle)
+            )
+          end
 
-        it 'does damage' do
-          expect { do_attack }.to change { target.hp }.by(-1)
+          it 'adds subject to target\'s battle' do
+            do_attack
+            expect(subject.battle).to eq(target.battle)
+          end
+
+          it 'does damage' do
+            expect { do_attack }.to change { target.hp }.by(-1)
+          end
         end
       end
     end

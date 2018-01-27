@@ -10,7 +10,7 @@ module CombatEngine
   #   Step 2.1: (✓)
   #   Attack someone and trigger battle
   #
-  #   Step 2.2: (✗)
+  #   Step 2.2: (✓)
   #   Launch an area attack with 3 targets and trigger battle
   #
   # Step 3: (✗)

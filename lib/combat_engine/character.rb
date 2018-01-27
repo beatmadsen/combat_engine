@@ -28,8 +28,8 @@ module CombatEngine
       @hp -= amount
     end
 
-    def start_battle(opponents: [])
-      Battle.start(teams: [[self], opponents])
+    def start_or_join_battle(opponents: [])
+      Battle.start_or_join(teams: [[self], opponents])
     end
 
     def battle
