@@ -54,7 +54,9 @@ RSpec.describe CombatEngine::Character do
         end
 
         it 'does damage to all targets' do
-          raise 'fail'
+          expect { do_attack }.to(
+            change { targets.sum(&:hp) }.by(-1 * targets.size)
+          )
         end
       end
     end
