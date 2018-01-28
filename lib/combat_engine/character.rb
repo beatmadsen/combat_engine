@@ -1,22 +1,16 @@
 module CombatEngine
   # Character does bla TODO
   class Character
-    attr_reader :hp
+    attr_reader :hp, :team
 
-    def initialize
+    def initialize(team:)
       @hp = 100
       @action_runner = Action::Runner.new
+      @team = team
     end
 
     def fire_action(action_name:, **options)
-      action = case action_name
-               when :demo_heal
-                 Action::DemoHeal.new(source: self, target: options[:target])
-               when :demo_attack
-                 Action::DemoAttack.new(source: self, target: options[:target])
-               when :demo_aoe_attack
-                 Action::DemoAoeAttack.new(source: self, targets: options[:targets])
-               end
+      action = create_action(action_name: action_name, **options)
       @action_runner.enqueue(action)
     end
 
@@ -29,7 +23,7 @@ module CombatEngine
     end
 
     def start_or_join_battle(opponents: [])
-      Battle.start_or_join(teams: [[self], opponents])
+      Battle.start_or_join(participants: [self] + opponents)
     end
 
     def battle
@@ -38,6 +32,36 @@ module CombatEngine
 
     def update(elapsed_time)
       @action_runner.update(elapsed_time)
+    end
+
+    ACTION_FACTORIES = {
+      demo_heal:
+        lambda do |**options|
+          Action::DemoHeal.new(
+            source: options[:source],
+            target: options[:target]
+          )
+        end,
+      demo_attack:
+        lambda do |**options|
+          Action::DemoAttack.new(
+            source: options[:source],
+            target: options[:target]
+          )
+        end,
+      demo_aoe_attack:
+        lambda do |**options|
+          Action::DemoAoeAttack.new(
+            source: options[:source],
+            targets: options[:targets]
+          )
+        end
+    }.freeze
+
+    private
+
+    def create_action(action_name:, **options)
+      ACTION_FACTORIES[action_name].call(options.merge(source: self))
     end
   end
 end
