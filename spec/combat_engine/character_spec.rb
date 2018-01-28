@@ -107,7 +107,7 @@ RSpec.describe CombatEngine::Character do
         end
 
         context 'when attacking targets' do
-          it 'adds all targets to same battle' do
+          it 'adds subject and remaining targets to same battle' do
             do_attack
             target_battles = targets.map(&:battle).compact
             expect(target_battles).to match_array(
