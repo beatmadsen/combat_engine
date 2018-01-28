@@ -9,11 +9,11 @@ module CombatEngine
         @battles.find { |b| b.participant?(character) }
       end
 
-      def end_battle(battle)
-        @battles.delete(battle)
+      def end_battle(b)
+        @battles.delete(b)
       end
 
-      #  idempotent: does nothing if mathing battle already exists
+      # idempotent: does nothing if mathing battle already exists
       def start_or_join(participants:)
         active_battles = active_battles(participants)
         if active_battles.one?

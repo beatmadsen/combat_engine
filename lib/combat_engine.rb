@@ -5,5 +5,4 @@ Dir.glob(
 
 # CombatEngine does bla TODO
 module CombatEngine
-  # Your code goes here...
 end
