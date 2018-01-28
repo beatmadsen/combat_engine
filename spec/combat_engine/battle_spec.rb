@@ -41,4 +41,20 @@ RSpec.describe CombatEngine::Battle do
       end
     end
   end
+
+  describe '.start_or_join' do
+    context 'when there are members from more than 2 teams' do
+      let(:characters) do
+        (%i[a b c] * 5).map do |team|
+          CombatEngine::Character.new(team: team, hp: 10)
+        end
+      end
+      it 'allows them all to participate in same battle' do
+        described_class.start_or_join(participants: characters)
+        active_battles = characters.map(&:battle)
+        first_battle = characters.first.battle
+        expect(active_battles).to match_array([first_battle] * characters.size)
+      end
+    end
+  end
 end

@@ -34,12 +34,27 @@ Game loop updates all characters each turn
 regardless of their inclusion in battles
 -----------------
 
-Step 6: (✗)
+Step 6: (✓)
 Battle with 3 teams
 -----------------
 
 Step 7: (✗)
-Schedule a DOT effect
+
+  Step 7.1: (✗)
+  Schedule a DOT effect and see targets take damage periodically
+
+  Step 7.2: (✗)
+  Schedule a Tank Protection effect
+  and let target transfer damage to tank (source)
+
+  Step 7.3: (✗)
+  Schedule a warding effect that cancels the next incoming attack action
+-----------------
+
+Step 8: (✗)
+Parties; whenever a character joins a battle, their whole party joins.
+Can characters be part of multiple battles?
+If no, what happens when only part of party is eligible to join?
 -----------------
 
 Step n-1: (✗)

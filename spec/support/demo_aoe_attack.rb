@@ -1,16 +1,11 @@
-require_relative 'multiple_target'
-
 module CombatEngine
   # Action module contains TODO
   module Action
     # A simple action to demo healing
     class DemoAoeAttack < MultipleTarget
       def execute
-        # TODO: this could be done in super class
         @source.start_or_join_battle(opponents: @targets)
-        @targets.each do |target|
-          target.damage_hp(1)
-        end
+        @targets.each { |target| target.damage_hp(1) }
       end
     end
   end
