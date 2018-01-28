@@ -3,8 +3,8 @@ module CombatEngine
   class Character
     attr_reader :hp, :team
 
-    def initialize(team:)
-      @hp = 100
+    def initialize(team:, hp:)
+      @hp = hp
       @action_runner = Action::Runner.new
       @team = team
     end

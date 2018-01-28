@@ -9,6 +9,10 @@ module CombatEngine
         @battles.find { |b| b.participant?(character) }
       end
 
+      def end_battle(battle)
+        @battles.delete(battle)
+      end
+
       #  idempotent: does nothing if mathing battle already exists
       def start_or_join(participants:)
         active_battles = active_battles(participants)
@@ -19,6 +23,10 @@ module CombatEngine
         else
           raise 'suggested teams have members in multiple battles'
         end
+      end
+
+      def update(elapsed_time)
+        @battles.each { |b| b.update(elapsed_time) }
       end
 
       private
@@ -44,6 +52,13 @@ module CombatEngine
       characters.each { |c| @teams[c.team] << c }
     end
 
-    def update(elapsed_time); end
+    def update(_elapsed_time)
+      @teams.each_value do |members|
+        if members.sum(&:hp) <= 0
+          Battle.end_battle(self)
+          break
+        end
+      end
+    end
   end
 end

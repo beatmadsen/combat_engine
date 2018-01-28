@@ -14,7 +14,7 @@ Step 2: (✗)
   Launch an area attack with 3 targets and trigger battle
 -----------------
 
-Step 3: (✗)
+Step 3: (✓)
 
   Step 3.1: (✓)
   Attack someone who is already in battle and join that battle
@@ -25,15 +25,20 @@ Step 3: (✗)
   and join that battle
 -----------------
 
-Step 4: (✗)
-End battle when all opponents have zero hp
+Step 4: (✓)
+End battle when all members of one team have zero hp
 -----------------
 
 Step 5: (✗)
-Battle with 3 teams
+Game loop updates all characters each turn
+regardless of their inclusion in battles
 -----------------
 
 Step 6: (✗)
+Battle with 3 teams
+-----------------
+
+Step 7: (✗)
 Schedule a DOT effect
 -----------------
 
