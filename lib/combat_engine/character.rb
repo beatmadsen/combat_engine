@@ -41,30 +41,30 @@ module CombatEngine
     end
 
     ACTION_FACTORIES = {
-      demo_heal:
+      heal:
         lambda do |**options|
-          Examples::DemoHeal.new(
+          Examples::Heal.new(
             source: options[:source],
             target: options[:target]
           )
         end,
-      demo_attack:
+      attack:
         lambda do |**options|
-          Examples::DemoAttack.new(
+          Examples::Attack.new(
             source: options[:source],
             target: options[:target]
           )
         end,
-      demo_aoe_attack:
+      aoe_attack:
         lambda do |**options|
-          Examples::DemoAoeAttack.new(
+          Examples::AoeAttack.new(
             source: options[:source],
             targets: options[:targets]
           )
         end,
-      demo_dot_attack:
+      dot_attack:
         lambda do |**options|
-          Examples::DemoDotAttack.new(
+          Examples::DotAttack.new(
             source: options[:source],
             target: options[:target]
           )

@@ -40,7 +40,7 @@ Battle with 3 teams
 
 Step 7: (✗)
 
-  Step 7.1: (✗)
+  Step 7.1: (✓)
   Add a DOT effect and see targets take damage periodically
 
   Step 7.2: (✗)

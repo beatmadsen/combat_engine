@@ -6,7 +6,7 @@ RSpec.describe CombatEngine::Character do
         let(:target) { described_class.new(team: :b, hp: 100) }
         context 'when healing target' do
           def do_heal
-            character.fire_action(action_name: :demo_heal, target: target)
+            character.fire_action(action_name: :heal, target: target)
             character.update(1)
           end
           it 'restores target hps' do
@@ -15,7 +15,7 @@ RSpec.describe CombatEngine::Character do
         end
 
         def do_attack
-          character.fire_action(action_name: :demo_attack, target: target)
+          character.fire_action(action_name: :attack, target: target)
           character.update(33)
         end
         context 'when target is not in battle' do
@@ -43,7 +43,7 @@ RSpec.describe CombatEngine::Character do
           let(:friend) { described_class.new(team: :a, hp: 100) }
 
           before do
-            friend.fire_action(action_name: :demo_attack, target: target)
+            friend.fire_action(action_name: :attack, target: target)
             friend.update(100)
           end
 
@@ -74,7 +74,7 @@ RSpec.describe CombatEngine::Character do
           (1..number_of_targets).map { described_class.new(team: :b, hp: 100) }
         end
         def do_attack
-          character.fire_action(action_name: :demo_aoe_attack, targets: targets)
+          character.fire_action(action_name: :aoe_attack, targets: targets)
           character.update(5)
         end
         context 'when none of the targets are already in battle' do
@@ -102,7 +102,7 @@ RSpec.describe CombatEngine::Character do
           let(:friend) { described_class.new(team: :a, hp: 100) }
           before do
             some_of_the_targets.each do |target|
-              friend.fire_action(action_name: :demo_attack, target: target)
+              friend.fire_action(action_name: :attack, target: target)
             end
             friend.update(100)
           end
@@ -128,44 +128,55 @@ RSpec.describe CombatEngine::Character do
   end
 
   describe '#update' do
-    def do_update
-      character.update(elapsed_time)
-    end
     context 'when character has an active DOT effect' do
-      let(:dot_interval) { Examples::DemoDotEffect::INTERVAL }
+      let(:dot_interval) { Examples::DotEffect::INTERVAL }
       let(:dot_damage) do
         # damage per charge/activation
-        Examples::DemoDotEffect::DAMAGE
+        Examples::DotEffect::DAMAGE
       end
-      let(:dot_charges) { Examples::DemoDotEffect::CHARGES }
+      let(:dot_charges) { Examples::DotEffect::CHARGES }
       let(:enemy) { described_class.new(team: :b, hp: 12) }
       before do
-        enemy.fire_action(action_name: :demo_dot_attack, target: character)
+        enemy.fire_action(action_name: :dot_attack, target: character)
         enemy.update(1)
       end
       context 'when elapsed time is greater than DOT damage interval' do
         let(:elapsed_time) { dot_interval + 1 }
 
         it 'applies damage to character' do
+          # expect damage to be applied once, because there's an offset
           expect do
-            do_update
+            character.update(elapsed_time)
           end.to change { character.hp }.by(-dot_damage)
         end
       end
 
-      context 'when elapsed time surpases effect lifetime' do
+      context 'when running time surpases effect lifetime' do
         let(:lifetime) do
-          # -1 because first charge happens before first interval
-          dot_interval * (dot_charges - 1)
+          dot_interval * dot_charges
         end
-        let(:long_time) { dot_interval * dot_charges * 2 }
-        let(:elapsed_time) { long_time }
+        let(:long_time) { dot_interval * dot_charges }
+        let(:running_time) { lifetime + long_time }
 
-        it 'removes effect from character' do
-          # test that no damage happens after last charge
-          expect do
-            do_update
-          end.to change { character.hp }.by(-dot_damage * dot_charges)
+        context 'when running time is spent in one update' do
+          let(:elapsed_time) { running_time }
+          it 'removes effect from character' do
+            # test that no damage happens after last charge
+            expect do
+              character.update(elapsed_time)
+            end.to change { character.hp }.by(-dot_damage * dot_charges)
+          end
+        end
+
+        context 'when running time is spent across multiple updates' do
+          let(:number_of_updates) { 100 }
+          let(:elapsed_time) { running_time / number_of_updates }
+          it 'removes effect from character' do
+            # test that no damage happens after last charge
+            expect do
+              number_of_updates.times { character.update(elapsed_time) }
+            end.to change { character.hp }.by(-dot_damage * dot_charges)
+          end
         end
       end
     end
