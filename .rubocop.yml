@@ -1,6 +1,9 @@
 Style/AsciiComments:
   Enabled: false
 
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: comma
+
 Metrics/BlockLength:
   Exclude:
     - 'Rakefile'

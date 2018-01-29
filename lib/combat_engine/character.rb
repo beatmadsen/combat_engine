@@ -6,6 +6,7 @@ module CombatEngine
     def initialize(team:, hp:)
       @hp = hp
       @action_runner = Action::Runner.new
+      @effect_runner = Effect::Runner.new
       @team = team
     end
 
@@ -30,38 +31,51 @@ module CombatEngine
       Battle.lookup(character: self)
     end
 
+    def add_effect(e)
+      @effect_runner.execute(e)
+    end
+
     def update(elapsed_time)
       @action_runner.update(elapsed_time)
+      @effect_runner.update(elapsed_time)
     end
 
     ACTION_FACTORIES = {
       demo_heal:
         lambda do |**options|
-          Action::DemoHeal.new(
+          Examples::DemoHeal.new(
             source: options[:source],
             target: options[:target]
           )
         end,
       demo_attack:
         lambda do |**options|
-          Action::DemoAttack.new(
+          Examples::DemoAttack.new(
             source: options[:source],
             target: options[:target]
           )
         end,
       demo_aoe_attack:
         lambda do |**options|
-          Action::DemoAoeAttack.new(
+          Examples::DemoAoeAttack.new(
             source: options[:source],
             targets: options[:targets]
           )
-        end
+        end,
+      demo_dot_attack:
+        lambda do |**options|
+          Examples::DemoDotAttack.new(
+            source: options[:source],
+            target: options[:target]
+          )
+        end,
     }.freeze
 
     private
 
     def create_action(action_name:, **options)
-      ACTION_FACTORIES[action_name].call(options.merge(source: self))
+      ACTION_FACTORIES.fetch(action_name)
+                      .call(options.merge(source: self))
     end
   end
 end

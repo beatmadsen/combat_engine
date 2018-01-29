@@ -1,11 +1,8 @@
-module CombatEngine
-  # Action module contains TODO
-  module Action
-    # A simple action to demo healing
-    class DemoHeal < SingleTarget
-      def execute
-        @target.heal_hp(1)
-      end
+module Examples
+  # A simple action to demo healing
+  class DemoHeal < CombatEngine::Action::SingleTarget
+    def execute
+      @target.heal_hp(1)
     end
   end
 end

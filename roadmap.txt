@@ -41,14 +41,21 @@ Battle with 3 teams
 Step 7: (✗)
 
   Step 7.1: (✗)
-  Schedule a DOT effect and see targets take damage periodically
+  Add a DOT effect and see targets take damage periodically
 
   Step 7.2: (✗)
-  Schedule a Tank Protection effect
+  Add a Tank Protection effect
   and let target transfer damage to tank (source)
 
   Step 7.3: (✗)
-  Schedule a warding effect that cancels the next incoming attack action
+  Add a warding effect that cancels the next incoming attack action
+  (NB: code in action runner to check if target will 'accept' action)
+
+  Step 7.4: (✗)
+  Add a battle observing effect that triggers another, shielding effect
+  on same character when a battle is won.
+  Observe that all attacks against subject fails for 5 seconds
+  after the battle was won.
 -----------------
 
 Step 8: (✗)
