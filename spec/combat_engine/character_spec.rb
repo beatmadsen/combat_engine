@@ -6,7 +6,7 @@ RSpec.describe CombatEngine::Character do
         let(:target) { described_class.new(team: :b, hp: 100) }
         context 'when healing target' do
           def do_heal
-            character.fire_action(action_name: :heal, target: target)
+            character.fire_action(factory: Examples::Heal, target: target)
             character.update(1)
           end
           it 'restores target hps' do
@@ -15,7 +15,7 @@ RSpec.describe CombatEngine::Character do
         end
 
         def do_attack
-          character.fire_action(action_name: :attack, target: target)
+          character.fire_action(factory: Examples::Attack, target: target)
           character.update(33)
         end
         context 'when target is not in battle' do
@@ -43,7 +43,7 @@ RSpec.describe CombatEngine::Character do
           let(:friend) { described_class.new(team: :a, hp: 100) }
 
           before do
-            friend.fire_action(action_name: :attack, target: target)
+            friend.fire_action(factory: Examples::Attack, target: target)
             friend.update(100)
           end
 
@@ -74,7 +74,7 @@ RSpec.describe CombatEngine::Character do
           (1..number_of_targets).map { described_class.new(team: :b, hp: 100) }
         end
         def do_attack
-          character.fire_action(action_name: :aoe_attack, targets: targets)
+          character.fire_action(factory: Examples::AoeAttack, targets: targets)
           character.update(5)
         end
         context 'when none of the targets are already in battle' do
@@ -102,7 +102,7 @@ RSpec.describe CombatEngine::Character do
           let(:friend) { described_class.new(team: :a, hp: 100) }
           before do
             some_of_the_targets.each do |target|
-              friend.fire_action(action_name: :attack, target: target)
+              friend.fire_action(factory: Examples::Attack, target: target)
             end
             friend.update(100)
           end
@@ -137,7 +137,7 @@ RSpec.describe CombatEngine::Character do
       let(:dot_charges) { Examples::DotEffect::CHARGES }
       let(:enemy) { described_class.new(team: :b, hp: 12) }
       before do
-        enemy.fire_action(action_name: :dot_attack, target: character)
+        enemy.fire_action(factory: Examples::DotAttack, target: character)
         enemy.update(1)
       end
       context 'when elapsed time is greater than DOT damage interval' do
@@ -177,6 +177,39 @@ RSpec.describe CombatEngine::Character do
               number_of_updates.times { character.update(elapsed_time) }
             end.to change { character.hp }.by(-dot_damage * dot_charges)
           end
+        end
+      end
+    end
+  end
+
+  describe '#damage_attribute' do
+    # TODO: these tests belong elsewhere
+    context 'when character is in battle with team mate tank' do
+      let(:tank) { described_class.new(team: :a, hp: 100) }
+      let(:enemy) { described_class.new(team: :b, hp: 100) }
+
+      before do
+        character.start_or_join_battle_with(tank, enemy)
+      end
+      context 'when tank has activated protection effect' do
+        before do
+          tank.fire_action(
+            factory: Examples::TankProtectionAction,
+            target: character
+          )
+          tank.update(1)
+        end
+        it 'reduces the damage to the protected character' do
+          expect do
+            character.facade(:action).damage_attribute(key: :hp, amount: 50)
+            character.update(1)
+          end.to change { character.hp }.by(-25)
+        end
+        it 'lets the tank take some of the damage' do
+          expect do
+            character.facade(:action).damage_attribute(key: :hp, amount: 50)
+            character.update(1)
+          end.to change { tank.hp }.by(-25)
         end
       end
     end

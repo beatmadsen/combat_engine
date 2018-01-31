@@ -5,7 +5,7 @@ RSpec.describe CombatEngine::Game do
         (1..3).map do
           a = CombatEngine::Character.new(team: :a, hp: 1)
           b = CombatEngine::Character.new(team: :b, hp: 1)
-          a.start_or_join_battle(opponents: [b])
+          a.start_or_join_battle_with(b)
           a.battle
         end
       end

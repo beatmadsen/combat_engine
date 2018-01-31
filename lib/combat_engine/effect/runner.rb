@@ -14,6 +14,14 @@ module CombatEngine
         @effects.each { |e| e.update(elapsed_time) }
         @effects.keep_if(&:active?)
       end
+
+      def before_damage(**options)
+        @effects.each { |e| e.before_damage(**options) }
+      end
+
+      def after_damage(**options)
+        @effects.each { |e| e.after_damage(**options) }
+      end
     end
   end
 end

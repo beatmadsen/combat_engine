@@ -56,6 +56,9 @@ Step 7: (✗)
   on same character when a battle is won.
   Observe that all attacks against subject fails for 5 seconds
   after the battle was won.
+
+  Step 7.5: (✗)
+  Add a temporary strength reducing effect
 -----------------
 
 Step 8: (✗)

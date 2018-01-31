@@ -1,11 +1,15 @@
 module Examples
   # A simple effect that applies damage with a regular interval
-  class DotEffect < CombatEngine::Effect::SingleTarget
+  class DotEffect < CombatEngine::Effect::Base
     DAMAGE = 3
     INTERVAL = 1000
     CHARGES = 10
 
-    def initialize(source:, target:)
+    def self.create_effect(**options)
+      new(**options)
+    end
+
+    def initialize(source:, target:, **)
       super(source: source, target: target, lifetime: CHARGES * INTERVAL)
       @run_time = 0
       @remaining_charges = CHARGES
@@ -33,7 +37,7 @@ module Examples
     end
 
     def apply_damage
-      @target.damage_hp(DAMAGE)
+      @target.damage_attribute(key: :hp, amount: DAMAGE)
     end
   end
 end
