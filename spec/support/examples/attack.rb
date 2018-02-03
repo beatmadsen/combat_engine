@@ -7,7 +7,7 @@ module Examples
 
     def execute
       @source.start_or_join_battle_with(@target)
-      @target.damage_attribute(key: :hp, amount: 1)
+      @target.damage(attribute: :hp, amount: 1)
     end
   end
 end

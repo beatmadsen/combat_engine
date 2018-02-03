@@ -3,7 +3,7 @@ RSpec.describe CombatEngine::Action::CharacterFacade do
     CombatEngine::Character.new(team: :a, hp: 100).facade(:action)
   end
 
-  describe '#damage_attribute' do
+  describe '#damage' do
     context 'when character is in battle with team mate tank' do
       let(:tank) { CombatEngine::Character.new(team: :a, hp: 100) }
       let(:enemy) { CombatEngine::Character.new(team: :b, hp: 100) }
@@ -21,13 +21,13 @@ RSpec.describe CombatEngine::Action::CharacterFacade do
         end
         it 'reduces the damage to the protected character' do
           expect do
-            character.damage_attribute(key: :hp, amount: 50)
+            character.damage(attribute: :hp, amount: 50)
             character.update(1)
           end.to change { character.hp }.by(-25)
         end
         it 'lets the tank take some of the damage' do
           expect do
-            character.damage_attribute(key: :hp, amount: 50)
+            character.damage(attribute: :hp, amount: 50)
             character.update(1)
           end.to change { tank.hp }.by(-25)
         end

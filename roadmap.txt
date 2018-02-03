@@ -59,6 +59,9 @@ Step 7: (✗)
 
   Step 7.5: (✗)
   Add a temporary strength reducing effect
+
+  Step 7.6: (✗)
+  Dispel effect
 -----------------
 
 Step 8: (✗)

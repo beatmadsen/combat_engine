@@ -6,7 +6,7 @@ module Examples
     end
 
     def execute
-      @target.heal_attribute(key: :hp, amount: 1)
+      @target.heal(attribute: :hp, amount: 1)
     end
   end
 end

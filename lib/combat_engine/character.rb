@@ -1,7 +1,13 @@
 module CombatEngine
   # Character does bla TODO
   class Character
+    extend Forwardable
+
     attr_reader :hp, :team
+
+    def_delegators :@effect_runner,
+                   :before_damage, :after_damage,
+                   :before_healing, :after_healing
 
     def initialize(team:, hp:)
       @hp = hp
@@ -9,6 +15,7 @@ module CombatEngine
       @effect_runner = Effect::Runner.new
       @team = team
       @damage_machine = DamageMachine.new
+      @healing_machine = HealingMachine.new
     end
 
     def fire_action(factory:, **options)
@@ -24,16 +31,17 @@ module CombatEngine
       @action_runner.enqueue(action)
     end
 
-    # TODO
-    def heal_attribute(key:, amount:)
-      case key
+    def apply_accumulated_healing(attribute:)
+      amount = @healing_machine.total(attribute: attribute)
+      @healing_machine.reset(attribute: attribute)
+      case attribute
       when :hp then @hp += amount
       end
     end
 
     def apply_accumulated_damage(attribute:)
       amount = @damage_machine.total(attribute: attribute)
-      @damage_machine.reset(attribute)
+      @damage_machine.reset(attribute: attribute)
       case attribute
       when :hp then @hp -= amount
       end
@@ -58,14 +66,6 @@ module CombatEngine
       @effect_runner.execute(effect)
     end
 
-    def before_damage(**options)
-      @effect_runner.before_damage(**options)
-    end
-
-    def after_damage(**options)
-      @effect_runner.after_damage(**options)
-    end
-
     def update(elapsed_time)
       @action_runner.update(elapsed_time)
       @effect_runner.update(elapsed_time)
@@ -84,14 +84,16 @@ module CombatEngine
     def effect_facade
       Effect::CharacterFacade.new(
         character: self,
-        damage_machine: @damage_machine
+        damage_machine: @damage_machine,
+        healing_machine: @healing_machine
       )
     end
 
     def action_facade
       Action::CharacterFacade.new(
         character: self,
-        damage_machine: @damage_machine
+        damage_machine: @damage_machine,
+        healing_machine: @healing_machine
       )
     end
   end

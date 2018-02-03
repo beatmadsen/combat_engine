@@ -13,6 +13,10 @@ module CombatEngine
       def before_damage(**options); end
 
       def after_damage(**options); end
+
+      def before_healing(**options); end
+
+      def after_healing(**options); end
     end
   end
 end

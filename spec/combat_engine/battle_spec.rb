@@ -14,7 +14,7 @@ RSpec.describe CombatEngine::Battle do
         before do
           initial_participants.each do |c|
             next unless c.team == :a
-            c.facade(:action).damage_attribute(key: :hp, amount: remaining_hp)
+            c.facade(:action).damage(attribute: :hp, amount: remaining_hp)
           end
         end
         it 'should end battle' do
@@ -30,8 +30,7 @@ RSpec.describe CombatEngine::Battle do
           team_b = initial_participants.select { |c| c.team == :b }
           # Leave one member on each team with hp
           (team_a[1..-1] + team_b[1..-1]).each do |c|
-            c.facade(:action)
-             .damage_attribute(key: :hp, amount: remaining_hp)
+            c.facade(:action).damage(attribute: :hp, amount: remaining_hp)
           end
         end
 

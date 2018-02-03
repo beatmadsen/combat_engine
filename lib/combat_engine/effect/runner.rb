@@ -22,6 +22,14 @@ module CombatEngine
       def after_damage(**options)
         @effects.each { |e| e.after_damage(**options) }
       end
+
+      def before_healing(**options)
+        @effects.each { |e| e.before_healing(**options) }
+      end
+
+      def after_healing(**options)
+        @effects.each { |e| e.after_healing(**options) }
+      end
     end
   end
 end

@@ -37,7 +37,7 @@ module Examples
     end
 
     def apply_damage
-      @target.damage_attribute(key: :hp, amount: DAMAGE)
+      @target.damage(attribute: :hp, amount: DAMAGE)
     end
   end
 end

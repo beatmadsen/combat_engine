@@ -23,10 +23,10 @@ module Examples
     end
 
     def before_damage(**options)
-      amount, attribute = options.values_at(:amount, :attribute)
-      half_amount = amount / 2.0
-      @target.reduce_damage(attribute: attribute, amount: half_amount)
-      @source.damage_attribute(key: attribute, amount: half_amount)
+      os = options.slice(:attribute, :amount)
+      os[:amount] *= 0.5
+      @target.reduce_damage(**os)
+      @source.damage(**os)
     end
   end
 end

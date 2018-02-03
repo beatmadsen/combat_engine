@@ -1,22 +1,21 @@
 module CombatEngine
-  # TODO: naming: accumulator?
-  # DamageMachine is a state machine that handles
-  # damage modification before application
-  class DamageMachine
+  # HealingMachine is a state machine that handles
+  # healing modification before application
+  class HealingMachine
     def initialize
       @deltas = Hash.new { |hash, attribute| hash[attribute] = 0.0 }
       @multipliers = Hash.new { |hash, attribute| hash[attribute] = 1.0 }
     end
 
-    def increase_damage(attribute:, amount:)
+    def increase_healing(attribute:, amount:)
       @deltas[attribute] += amount
     end
 
-    def reduce_damage(attribute:, amount:)
+    def reduce_healing(attribute:, amount:)
       @deltas[attribute] -= amount
     end
 
-    def multiply_damage(attribute:, factor:)
+    def multiply_healing(attribute:, factor:)
       @multipliers[attribute] *= factor
     end
 

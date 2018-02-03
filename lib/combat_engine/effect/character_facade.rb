@@ -7,22 +7,24 @@ module CombatEngine
       def_delegators :@damage_machine,
                      :increase_damage, :reduce_damage, :multiply_damage
 
-      def initialize(character:, damage_machine:)
+      def initialize(character:, damage_machine:, healing_machine:)
         @character = character
         @damage_machine = damage_machine
+        @healing_machine = healing_machine
       end
 
-      #  TODO: call damage machine with negative damage?
-      def heal_attribute(key:, amount:)
-        @character.heal_attribute(key: key, amount: amount)
+      def heal(attribute:, amount:)
+        @character.before_healing(attribute: attribute, amount: amount)
+        @healing_machine.increase_healing(attribute: attribute, amount: amount)
+        @character.apply_accumulated_healing(attribute: attribute)
+        @character.after_healing(attribute: attribute, amount: amount)
       end
 
-      # TODO: rename to just `damage`
-      def damage_attribute(key:, amount:)
-        @character.before_damage(attribute: key, amount: amount)
-        @damage_machine.increase_damage(attribute: key, amount: amount)
-        @character.apply_accumulated_damage(attribute: key)
-        @character.after_damage(attribute: key, amount: amount)
+      def damage(attribute:, amount:)
+        @character.before_damage(attribute: attribute, amount: amount)
+        @damage_machine.increase_damage(attribute: attribute, amount: amount)
+        @character.apply_accumulated_damage(attribute: attribute)
+        @character.after_damage(attribute: attribute, amount: amount)
       end
 
       def facade(type)

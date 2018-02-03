@@ -7,24 +7,26 @@ module CombatEngine
                      :hp, :team, :battle, :update,
                      :start_or_join_battle_with, :receive_effect
 
-      # TODO: need healing machine with slightly different attributes;
-      # reducing damage does nothing below 0 delta;
-      # applying negative damage feels unintuitive;
-      def heal_attribute(key:, amount:)
-        @character.heal_attribute(key: key, amount: amount)
-      end
-
-      # TODO: rename to just `damage`
-      def damage_attribute(key:, amount:)
-        @character.before_damage(attribute: key, amount: amount)
-        @damage_machine.increase_damage(attribute: key, amount: amount)
-        @character.apply_accumulated_damage(attribute: key)
-        @character.after_damage(attribute: key, amount: amount)
-      end
-
-      def initialize(character:, damage_machine:)
+      def initialize(character:, damage_machine:, healing_machine:)
         @character = character
         @damage_machine = damage_machine
+        @healing_machine = healing_machine
+      end
+
+      def heal(attribute:, amount:)
+        options = { attribute: attribute, amount: amount }
+        @character.before_healing(**options)
+        @healing_machine.increase_healing(**options)
+        @character.apply_accumulated_healing(attribute: attribute)
+        @character.after_healing(**options)
+      end
+
+      def damage(attribute:, amount:)
+        options = { attribute: attribute, amount: amount }
+        @character.before_damage(**options)
+        @damage_machine.increase_damage(**options)
+        @character.apply_accumulated_damage(attribute: attribute)
+        @character.after_damage(**options)
       end
 
       def facade(type)
