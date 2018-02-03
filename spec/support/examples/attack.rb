@@ -4,7 +4,7 @@ module Examples
     def self.create_action(**options)
       new(**options)
     end
-    
+
     def execute
       @source.start_or_join_battle_with(@target)
       @target.damage_attribute(key: :hp, amount: 1)

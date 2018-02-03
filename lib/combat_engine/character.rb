@@ -13,10 +13,10 @@ module CombatEngine
 
     def fire_action(factory:, **options)
       os = {}
-      if t = options[:target]
-        os[:target] = t.facade(:action)
+      if (target = options[:target])
+        os[:target] = target.facade(:action)
       end
-      if ts = options[:targets]
+      if (ts = options[:targets])
         os[:targets] = ts.map { |t| t.facade(:action) }
       end
       os[:source] = facade(:action)
@@ -49,9 +49,9 @@ module CombatEngine
       Battle.lookup(character: self)
     end
 
-    def fire_effect(factory:, **options)
-      target = options[:target].facade(:effect)
-      source = facade(:effect)
+    def receive_effect(factory:, **options)
+      target = facade(:effect)
+      source = options[:source].facade(:effect)
       effect = factory.create_effect(
         options.merge(target: target, source: source)
       )
@@ -74,17 +74,25 @@ module CombatEngine
     def facade(type)
       case type
       when :none then self
-      when :effect
-        Effect::CharacterFacade.new(
-          character: self,
-          damage_machine: @damage_machine
-        )
-      when :action
-        Action::CharacterFacade.new(
-          character: self,
-          damage_machine: @damage_machine
-        )
+      when :effect then effect_facade
+      when :action then action_facade
       end
+    end
+
+    private
+
+    def effect_facade
+      Effect::CharacterFacade.new(
+        character: self,
+        damage_machine: @damage_machine
+      )
+    end
+
+    def action_facade
+      Action::CharacterFacade.new(
+        character: self,
+        damage_machine: @damage_machine
+      )
     end
   end
 end

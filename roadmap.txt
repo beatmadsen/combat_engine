@@ -43,7 +43,7 @@ Step 7: (✗)
   Step 7.1: (✓)
   Add a DOT effect and see targets take damage periodically
 
-  Step 7.2: (✗)
+  Step 7.2: (✓)
   Add a Tank Protection effect
   and let target transfer damage to tank (source)
 

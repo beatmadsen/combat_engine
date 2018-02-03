@@ -181,37 +181,4 @@ RSpec.describe CombatEngine::Character do
       end
     end
   end
-
-  describe '#damage_attribute' do
-    # TODO: these tests belong elsewhere
-    context 'when character is in battle with team mate tank' do
-      let(:tank) { described_class.new(team: :a, hp: 100) }
-      let(:enemy) { described_class.new(team: :b, hp: 100) }
-
-      before do
-        character.start_or_join_battle_with(tank, enemy)
-      end
-      context 'when tank has activated protection effect' do
-        before do
-          tank.fire_action(
-            factory: Examples::TankProtectionAction,
-            target: character
-          )
-          tank.update(1)
-        end
-        it 'reduces the damage to the protected character' do
-          expect do
-            character.facade(:action).damage_attribute(key: :hp, amount: 50)
-            character.update(1)
-          end.to change { character.hp }.by(-25)
-        end
-        it 'lets the tank take some of the damage' do
-          expect do
-            character.facade(:action).damage_attribute(key: :hp, amount: 50)
-            character.update(1)
-          end.to change { tank.hp }.by(-25)
-        end
-      end
-    end
-  end
 end

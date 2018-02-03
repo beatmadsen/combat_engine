@@ -31,7 +31,7 @@ RSpec.describe CombatEngine::Battle do
           # Leave one member on each team with hp
           (team_a[1..-1] + team_b[1..-1]).each do |c|
             c.facade(:action)
-             .damage_attribute(key: :hp, amount: remaining_hp) 
+             .damage_attribute(key: :hp, amount: remaining_hp)
           end
         end
 

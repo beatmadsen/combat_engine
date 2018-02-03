@@ -4,11 +4,10 @@ module CombatEngine
     class CharacterFacade
       extend Forwardable
       def_delegators :@character,
-                     :hp, :team, :battle,
-                     :start_or_join_battle_with, :fire_effect
+                     :hp, :team, :battle, :update,
+                     :start_or_join_battle_with, :receive_effect
 
-      # TODO:
-      # need healing machine with slightly different attributes;
+      # TODO: need healing machine with slightly different attributes;
       # reducing damage does nothing below 0 delta;
       # applying negative damage feels unintuitive;
       def heal_attribute(key:, amount:)
@@ -31,7 +30,8 @@ module CombatEngine
       def facade(type)
         case type
         when :action then self
-        else @character.facade(type); end
+        else @character.facade(type)
+        end
       end
     end
   end

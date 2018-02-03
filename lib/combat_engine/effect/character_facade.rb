@@ -28,7 +28,8 @@ module CombatEngine
       def facade(type)
         case type
         when :effect then self
-        else @character.facade(type); end
+        else @character.facade(type)
+        end
       end
     end
   end

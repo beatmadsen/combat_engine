@@ -6,9 +6,9 @@ module Examples
     end
 
     def execute
-      @source.fire_effect(
+      @target.receive_effect(
         factory: TankProtectionEffect,
-        target: @target
+        source: @source
       )
     end
   end

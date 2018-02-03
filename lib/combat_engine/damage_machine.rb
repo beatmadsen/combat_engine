@@ -1,5 +1,7 @@
 module CombatEngine
   # TODO: naming: accumulator?
+  # DamageMachine is a state machine that handles
+  # damage modification before application
   class DamageMachine
     def initialize
       @deltas = Hash.new { |hash, attribute| hash[attribute] = 0.0 }
@@ -15,7 +17,7 @@ module CombatEngine
     end
 
     def multiply_damage(attribute:, factor:)
-      @multipliers[attribute] *= amount
+      @multipliers[attribute] *= factor
     end
 
     def total(attribute:)

@@ -7,8 +7,7 @@ module Examples
 
     def execute
       @source.start_or_join_battle_with(@target)
-      # TODO: who runs effect - BUG!!!
-      @source.fire_effect(factory: DotEffect, target: @target)
+      @target.receive_effect(factory: DotEffect, source: @source)
     end
   end
 end
