@@ -62,6 +62,9 @@ Step 7: (✗)
 
   Step 7.6: (✗)
   Dispel effect
+
+  Step 7.7: (✗)
+  Double remaining time of all beneficial effects
 -----------------
 
 Step 8: (✗)

@@ -125,6 +125,47 @@ RSpec.describe CombatEngine::Character do
         end
       end
     end
+
+    context 'when character is already in battle' do
+      let(:enemy) { described_class.new(team: :b, hp: 100) }
+      before do
+        character.start_or_join_battle_with(enemy)
+      end
+
+      context 'when target has an active warding effect' do
+        let(:other_enemy) { described_class.new(team: :b, hp: 100) }
+        before do
+          other_enemy.fire_action(
+            factory: Examples::WardingAction,
+            target: enemy
+          )
+          other_enemy.update(1)
+        end
+
+        def do_attack
+          character.fire_action(factory: Examples::Attack, target: enemy)
+          character.update(16)
+        end
+
+        it 'fails to execute attack' do
+          do_attack
+          expect(character.facade(:action).last_action_status).to eq(:failed)
+        end
+
+        it 'does no damage' do
+          expect {
+            do_attack
+          }.to_not change { enemy.hp }
+
+        end
+
+        it 'succeeds with action that is beneficial to target' do
+          character.fire_action(factory: Examples::Heal, target: enemy)
+          character.update(2)
+          expect(character.facade(:action).last_action_status).to eq(:successful)
+        end
+      end
+    end
   end
 
   describe '#update' do
