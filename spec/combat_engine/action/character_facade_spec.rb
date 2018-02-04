@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe CombatEngine::Action::CharacterFacade do
   let(:character) do
     CombatEngine::Character.new(team: :a, hp: 100).facade(:action)

@@ -47,9 +47,8 @@ Step 7: (✗)
   Add a Tank Protection effect
   and let target transfer damage to tank (source)
 
-  Step 7.3: (✗)
+  Step 7.3: (✓)
   Add a warding effect that cancels the next incoming attack action
-  (NB: code in action runner to check if target will 'accept' action)
 
   Step 7.4: (✗)
   Add a battle observing effect that triggers another, shielding effect

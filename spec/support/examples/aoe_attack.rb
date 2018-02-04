@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Examples
   # A simple action to demo healing
   class AoeAttack < CombatEngine::Action::MultipleTarget
@@ -5,9 +7,12 @@ module Examples
       new(**options)
     end
 
-    def execute
+    protected
+
+    def on_execute
       @source.start_or_join_battle_with(*@targets)
       @targets.each { |target| target.damage(attribute: :hp, amount: 1) }
+      :successful
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CombatEngine
   # TODO: naming: accumulator?
   # DamageMachine is a state machine that handles

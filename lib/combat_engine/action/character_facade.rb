@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CombatEngine
   module Action
     # Wraps character for use in actions
@@ -5,7 +7,9 @@ module CombatEngine
       extend Forwardable
       def_delegators :@character,
                      :hp, :team, :battle, :update,
-                     :start_or_join_battle_with, :receive_effect
+                     :before_action, :after_action,
+                     :start_or_join_battle_with, :receive_effect,
+                     :accept_action, :fail_incoming_action
 
       def initialize(character:, damage_machine:, healing_machine:)
         @character = character
@@ -27,6 +31,10 @@ module CombatEngine
         @damage_machine.increase_damage(**options)
         @character.apply_accumulated_damage(attribute: attribute)
         @character.after_damage(**options)
+      end
+
+      def last_action_status
+        @character.last_executed_action&.status
       end
 
       def facade(type)

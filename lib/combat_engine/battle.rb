@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CombatEngine
   # Battle does bla TODO
   class Battle

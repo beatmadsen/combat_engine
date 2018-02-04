@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Examples
   # A simple effect that applies damage with a regular interval
   class DotEffect < CombatEngine::Effect::Base

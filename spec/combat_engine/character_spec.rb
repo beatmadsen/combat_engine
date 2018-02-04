@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe CombatEngine::Character do
   let(:character) { described_class.new(team: :a, hp: 100) }
   describe '#fire_action' do
@@ -153,16 +155,17 @@ RSpec.describe CombatEngine::Character do
         end
 
         it 'does no damage' do
-          expect {
+          expect do
             do_attack
-          }.to_not change { enemy.hp }
-
+          end.to_not(change { enemy.hp })
         end
 
         it 'succeeds with action that is beneficial to target' do
           character.fire_action(factory: Examples::Heal, target: enemy)
           character.update(2)
-          expect(character.facade(:action).last_action_status).to eq(:successful)
+          expect(
+            character.facade(:action).last_action_status
+          ).to eq(:successful)
         end
       end
     end

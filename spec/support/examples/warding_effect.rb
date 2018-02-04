@@ -2,8 +2,8 @@
 
 module Examples
   # A tank effect that protects target by sharing damage with tank (source)
-  class TankProtectionEffect < CombatEngine::Effect::Base
-    LIFETIME = 5000
+  class WardingEffect < CombatEngine::Effect::Base
+    LIFETIME = 200
 
     def self.create_effect(**options)
       new(**options)
@@ -14,6 +14,11 @@ module Examples
       @run_time = 0
     end
 
+    def before_action(**options)
+      adversarial = options[:action].adversarial?
+      @target.fail_incoming_action if adversarial
+    end
+
     # Update effect state.
     # Arg is time elapsed since last tick.
     def update(elapsed_time)
@@ -22,13 +27,6 @@ module Examples
 
     def active?
       @run_time <= LIFETIME
-    end
-
-    def before_damage(**options)
-      os = options.slice(:attribute, :amount)
-      os[:amount] *= 0.5
-      @target.reduce_damage(**os)
-      @source.damage(**os)
     end
   end
 end

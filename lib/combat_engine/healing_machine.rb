@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CombatEngine
   # HealingMachine is a state machine that handles
   # healing modification before application

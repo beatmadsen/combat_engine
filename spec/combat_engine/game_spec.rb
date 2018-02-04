@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe CombatEngine::Game do
   describe '.update' do
     context 'when there are ongoing battles' do

@@ -1,22 +1,25 @@
+# frozen_string_literal: true
+
 module CombatEngine
   # Action module contains TODO
   module Action
     # Runner schedules and executes actions
     class Runner
-      def enqueue(action)
-        queue.push(action)
+      attr_reader :last_executed
+
+      def set(action)
+        @next = action
       end
 
-      def update(_elapsed_time)
-        while (action = queue.shift)
-          action.execute
-        end
+      def clear
+        @next = nil
       end
 
-      private
-
-      def queue
-        @_queue ||= []
+      def execute
+        return if @next.nil?
+        @next.execute
+        @last_executed = @next
+        @next = nil
       end
     end
   end

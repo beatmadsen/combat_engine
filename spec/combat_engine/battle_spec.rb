@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe CombatEngine::Battle do
   describe '.update' do
     before do

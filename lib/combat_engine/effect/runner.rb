@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CombatEngine
   module Effect
     # Runner executes and updates effects while they're active
@@ -29,6 +31,14 @@ module CombatEngine
 
       def after_healing(**options)
         @effects.each { |e| e.after_healing(**options) }
+      end
+
+      def before_action(**options)
+        @effects.each { |e| e.before_action(**options) }
+      end
+
+      def after_action(**options)
+        @effects.each { |e| e.after_action(**options) }
       end
     end
   end

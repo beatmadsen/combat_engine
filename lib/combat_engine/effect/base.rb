@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CombatEngine
   # Effect module contains TODO
   module Effect
@@ -17,6 +19,10 @@ module CombatEngine
       def before_healing(**options); end
 
       def after_healing(**options); end
+
+      def before_action(**options); end
+
+      def after_action(**options); end
     end
   end
 end

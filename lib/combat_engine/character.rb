@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CombatEngine
   # Character does bla TODO
   class Character
@@ -7,6 +9,7 @@ module CombatEngine
 
     def_delegators :@effect_runner,
                    :before_damage, :after_damage,
+                   :before_action,
                    :before_healing, :after_healing
 
     def initialize(team:, hp:)
@@ -16,19 +19,30 @@ module CombatEngine
       @team = team
       @damage_machine = DamageMachine.new
       @healing_machine = HealingMachine.new
+      @accept_incoming_action = true
     end
 
     def fire_action(factory:, **options)
-      os = {}
-      if (target = options[:target])
-        os[:target] = target.facade(:action)
-      end
-      if (ts = options[:targets])
-        os[:targets] = ts.map { |t| t.facade(:action) }
-      end
-      os[:source] = facade(:action)
+      os = participant_facades(options)
       action = factory.create_action(options.merge(os))
-      @action_runner.enqueue(action)
+      cs = os.values.flatten
+      @action_runner.set(action)
+      cs.each { |c| c.before_action(action: action) }
+      @action_runner.execute
+      cs.each { |c| c.after_action(action: action) }
+    end
+
+    def fail_incoming_action
+      @accept_incoming_action = false
+    end
+
+    def accept_action(_a)
+      @accept_incoming_action
+    end
+
+    def after_action(**options)
+      @accept_incoming_action = true
+      @effect_runner.after_action(**options)
     end
 
     def apply_accumulated_healing(attribute:)
@@ -66,20 +80,37 @@ module CombatEngine
       @effect_runner.execute(effect)
     end
 
+    def last_executed_action
+      @action_runner.last_executed
+    end
+
     def update(elapsed_time)
-      @action_runner.update(elapsed_time)
       @effect_runner.update(elapsed_time)
     end
 
     def facade(type)
-      case type
-      when :none then self
-      when :effect then effect_facade
-      when :action then action_facade
-      end
+      facades[type] ||=
+        case type
+        when :none then self
+        when :effect then effect_facade
+        when :action then action_facade
+        end
     end
 
     private
+
+    def participant_facades(options)
+      os = {}
+      os[:target] = options[:target]&.facade(:action)
+      os[:targets] = options[:targets]&.map { |t| t.facade(:action) }
+      os[:source] = facade(:action)
+      os.compact!
+      os
+    end
+
+    def facades
+      @_facades ||= {}
+    end
 
     def effect_facade
       Effect::CharacterFacade.new(

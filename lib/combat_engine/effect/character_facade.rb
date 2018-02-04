@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 module CombatEngine
   module Effect
     # Wraps character for use in effects
     class CharacterFacade
       extend Forwardable
-      def_delegators :@character, :hp, :team, :battle
+      def_delegators :@character,
+                     :hp, :team, :battle,
+                     :accept_action, :fail_incoming_action
       def_delegators :@damage_machine,
                      :increase_damage, :reduce_damage, :multiply_damage
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CombatEngine
   # The main integration point with a game
   class Game
