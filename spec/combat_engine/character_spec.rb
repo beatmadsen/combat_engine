@@ -1,175 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe CombatEngine::Character do
-  let(:character) { described_class.new(team: :a, hp: 100) }
-  describe '#fire_action' do
-    context 'when character outside of battle' do
-      context 'when we have a target' do
-        let(:target) { described_class.new(team: :b, hp: 100) }
-        context 'when healing target' do
-          def do_heal
-            character.fire_action(factory: Examples::Heal, target: target)
-            character.update(1)
-          end
-          it 'restores target hps' do
-            expect { do_heal }.to change { target.hp }.by 1
-          end
-        end
-
-        def do_attack
-          character.fire_action(factory: Examples::Attack, target: target)
-          character.update(33)
-        end
-        context 'when target is not in battle' do
-          context 'when attacking target' do
-            it 'triggers a battle' do
-              expect { do_attack }.to(
-                change { character.battle }
-                .from(nil)
-                .to(CombatEngine::Battle)
-              )
-            end
-
-            it 'adds target to character\'s battle' do
-              do_attack
-              expect(target.battle).to eq(character.battle)
-            end
-
-            it 'does damage' do
-              expect { do_attack }.to change { target.hp }.by(-1)
-            end
-          end
-        end
-
-        context 'when target is already in battle' do
-          let(:friend) { described_class.new(team: :a, hp: 100) }
-
-          before do
-            friend.fire_action(factory: Examples::Attack, target: target)
-            friend.update(100)
-          end
-
-          context 'when attacking target' do
-            it 'puts character in battle' do
-              expect { do_attack }.to(
-                change { character.battle }
-                .from(nil)
-                .to(CombatEngine::Battle)
-              )
-            end
-
-            it 'adds character to target\'s battle' do
-              do_attack
-              expect(character.battle).to eq(target.battle)
-            end
-
-            it 'does damage' do
-              expect { do_attack }.to change { target.hp }.by(-1)
-            end
-          end
-        end
-      end
-
-      context 'when we have multiple targets' do
-        let(:number_of_targets) { 5 }
-        let(:targets) do
-          (1..number_of_targets).map { described_class.new(team: :b, hp: 100) }
-        end
-        def do_attack
-          character.fire_action(factory: Examples::AoeAttack, targets: targets)
-          character.update(5)
-        end
-        context 'when none of the targets are already in battle' do
-          context 'when attacking targets' do
-            it 'adds all targets to same battle' do
-              do_attack
-              target_battles = targets.map(&:battle).compact
-              expect(target_battles).to match_array(
-                [character.battle] * number_of_targets
-              )
-            end
-
-            it 'does damage to all targets' do
-              expect { do_attack }.to(
-                change { targets.sum(&:hp) }.by(-1 * targets.size)
-              )
-            end
-          end
-        end
-        context 'when some of the targets are already in battle' do
-          let(:some_of_the_targets) do
-            n = number_of_targets / 2
-            targets[1..n]
-          end
-          let(:friend) { described_class.new(team: :a, hp: 100) }
-          before do
-            some_of_the_targets.each do |target|
-              friend.fire_action(factory: Examples::Attack, target: target)
-            end
-            friend.update(100)
-          end
-
-          context 'when attacking targets' do
-            it 'adds character and remaining targets to same battle' do
-              do_attack
-              target_battles = targets.map(&:battle).compact
-              expect(target_battles).to match_array(
-                [character.battle] * number_of_targets
-              )
-            end
-
-            it 'does damage to all targets' do
-              expect { do_attack }.to(
-                change { targets.sum(&:hp) }.by(-1 * targets.size)
-              )
-            end
-          end
-        end
-      end
-    end
-
-    context 'when character is already in battle' do
-      let(:enemy) { described_class.new(team: :b, hp: 100) }
-      before do
-        character.start_or_join_battle_with(enemy)
-      end
-
-      context 'when target has an active warding effect' do
-        let(:other_enemy) { described_class.new(team: :b, hp: 100) }
-        before do
-          other_enemy.fire_action(
-            factory: Examples::WardingAction,
-            target: enemy
-          )
-          other_enemy.update(1)
-        end
-
-        def do_attack
-          character.fire_action(factory: Examples::Attack, target: enemy)
-          character.update(16)
-        end
-
-        it 'fails to execute attack' do
-          do_attack
-          expect(character.facade(:action).last_action_status).to eq(:failed)
-        end
-
-        it 'does no damage' do
-          expect do
-            do_attack
-          end.to_not(change { enemy.hp })
-        end
-
-        it 'succeeds with action that is beneficial to target' do
-          character.fire_action(factory: Examples::Heal, target: enemy)
-          character.update(2)
-          expect(
-            character.facade(:action).last_action_status
-          ).to eq(:successful)
-        end
-      end
-    end
-  end
+RSpec.describe CombatEngine::Character::Facade do
+  let(:character_unwrapped) { Examples::Character.new(team: :a, hp: 100) }
+  let(:character) { character_unwrapped.combat_facade }
 
   describe '#update' do
     context 'when character has an active DOT effect' do
@@ -179,10 +12,9 @@ RSpec.describe CombatEngine::Character do
         Examples::DotEffect::DAMAGE
       end
       let(:dot_charges) { Examples::DotEffect::CHARGES }
-      let(:enemy) { described_class.new(team: :b, hp: 12) }
+      let(:enemy) { Examples::Character.new(team: :b, hp: 12).combat_facade }
       before do
         enemy.fire_action(factory: Examples::DotAttack, target: character)
-        enemy.update(1)
       end
       context 'when elapsed time is greater than DOT damage interval' do
         let(:elapsed_time) { dot_interval + 1 }
@@ -190,8 +22,8 @@ RSpec.describe CombatEngine::Character do
         it 'applies damage to character' do
           # expect damage to be applied once, because there's an offset
           expect do
-            character.update(elapsed_time)
-          end.to change { character.hp }.by(-dot_damage)
+            character_unwrapped.update(elapsed_time)
+          end.to change { character.attribute(:hp) }.by(-dot_damage)
         end
       end
 
@@ -207,8 +39,12 @@ RSpec.describe CombatEngine::Character do
           it 'removes effect from character' do
             # test that no damage happens after last charge
             expect do
-              character.update(elapsed_time)
-            end.to change { character.hp }.by(-dot_damage * dot_charges)
+              character_unwrapped.update(elapsed_time)
+            end.to(
+              change do
+                character.attribute(:hp)
+              end.by(-dot_damage * dot_charges)
+            )
           end
         end
 
@@ -218,8 +54,12 @@ RSpec.describe CombatEngine::Character do
           it 'removes effect from character' do
             # test that no damage happens after last charge
             expect do
-              number_of_updates.times { character.update(elapsed_time) }
-            end.to change { character.hp }.by(-dot_damage * dot_charges)
+              number_of_updates.times do
+                character_unwrapped.update(elapsed_time)
+              end
+            end.to(
+              change { character.attribute(:hp) }.by(-dot_damage * dot_charges)
+            )
           end
         end
       end

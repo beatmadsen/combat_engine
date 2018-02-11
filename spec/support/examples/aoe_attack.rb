@@ -11,7 +11,9 @@ module Examples
 
     def on_execute
       @source.start_or_join_battle_with(*@targets)
-      @targets.each { |target| target.damage(attribute: :hp, amount: 1) }
+      @targets.each do |target|
+        target.damage(attribute: :hp, amount: 1)
+      end
       :successful
     end
   end

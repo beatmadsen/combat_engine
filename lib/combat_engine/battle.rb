@@ -2,7 +2,7 @@
 
 module CombatEngine
   # Battle does bla TODO
-  class Battle
+  module Battle
     # Eigenclass state
     @battles = Set.new
 
@@ -21,7 +21,7 @@ module CombatEngine
         if active_battles.one?
           active_battles.first.add_participants(*participants)
         elsif active_battles.empty?
-          @battles << new(participants: participants)
+          @battles << Base.new(participants: participants)
         else
           raise 'suggested teams have members in multiple battles'
         end
@@ -37,28 +37,6 @@ module CombatEngine
         participants.each_with_object(Set.new) do |c, acc|
           battle = lookup(character: c)
           acc << battle unless battle.nil?
-        end
-      end
-    end
-
-    def initialize(participants:)
-      @teams = Hash.new { |hash, key| hash[key] = Set.new }
-      add_participants(*participants)
-    end
-
-    def participant?(character)
-      @teams[character.team].include?(character)
-    end
-
-    def add_participants(*characters)
-      characters.each { |c| @teams[c.team] << c }
-    end
-
-    def update(_elapsed_time)
-      @teams.each_value do |members|
-        if members.sum(&:hp) <= 0
-          Battle.end_battle(self)
-          break
         end
       end
     end

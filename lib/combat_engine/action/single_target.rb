@@ -13,7 +13,7 @@ module CombatEngine
       protected
 
       def validate
-        @target.accept_action(self) ? :validated : :failed
+        @target.accept_action?(self) ? :validated : :failed
       end
     end
   end

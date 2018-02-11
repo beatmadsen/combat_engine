@@ -9,14 +9,14 @@ RSpec.describe CombatEngine::Battle do
       let(:remaining_hp) { 5 }
       let(:initial_participants) do
         (%i[a b] * 3).map do |team|
-          CombatEngine::Character.new(team: team, hp: remaining_hp)
+          Examples::Character.new(team: team, hp: remaining_hp).combat_facade
         end
       end
       context 'when one team\'s members have lost all hp' do
         before do
           initial_participants.each do |c|
             next unless c.team == :a
-            c.facade(:action).damage(attribute: :hp, amount: remaining_hp)
+            c.damage(attribute: :hp, amount: remaining_hp)
           end
         end
         it 'should end battle' do
@@ -32,7 +32,7 @@ RSpec.describe CombatEngine::Battle do
           team_b = initial_participants.select { |c| c.team == :b }
           # Leave one member on each team with hp
           (team_a[1..-1] + team_b[1..-1]).each do |c|
-            c.facade(:action).damage(attribute: :hp, amount: remaining_hp)
+            c.damage(attribute: :hp, amount: remaining_hp)
           end
         end
 
@@ -50,7 +50,7 @@ RSpec.describe CombatEngine::Battle do
     context 'when there are members from more than 2 teams' do
       let(:characters) do
         (%i[a b c] * 5).map do |team|
-          CombatEngine::Character.new(team: team, hp: 10)
+          Examples::Character.new(team: team, hp: 10).combat_facade
         end
       end
       it 'allows them all to participate in same battle' do

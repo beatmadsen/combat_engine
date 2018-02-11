@@ -5,8 +5,8 @@ RSpec.describe CombatEngine::Game do
     context 'when there are ongoing battles' do
       let(:battles) do
         (1..3).map do
-          a = CombatEngine::Character.new(team: :a, hp: 1)
-          b = CombatEngine::Character.new(team: :b, hp: 1)
+          a = Examples::Character.new(team: :a, hp: 1).combat_facade
+          b = Examples::Character.new(team: :b, hp: 1).combat_facade
           a.start_or_join_battle_with(b)
           a.battle
         end
