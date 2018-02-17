@@ -40,7 +40,8 @@ RSpec.describe CombatEngine::Character::Facade do
   describe '#fire_action' do
     context 'when character outside of battle' do
       context 'when we have a target' do
-        let(:target) { create_character(team: :b, hp: 100).combat_facade }
+        let(:target_unwrapped) { create_character(team: :b, hp: 100) }
+        let(:target) { target_unwrapped.combat_facade }
         context 'when healing target' do
           def do_heal
             character.fire_action(factory: Examples::Heal, target: target)
@@ -97,6 +98,38 @@ RSpec.describe CombatEngine::Character::Facade do
 
             it 'does damage' do
               expect { do_attack }.to change { target.attribute(:hp) }.by(-1)
+            end
+          end
+
+          context 'when target gets immunity after winning a battle' do
+            before do
+              target.receive_effect(factory: ImmunityOnWinEffect)
+            end
+
+            context 'when target just won a battle' do
+              before do
+                friend.damage(attribute: :hp, amount: 100_000_000)
+                target.battle.update(1)
+              end
+
+              context 'when immunity time has passed' do
+                before do
+                  target_unwrapped.update(ImmunityEffect::DURATION)
+                end
+                it 'initiates a new battle' do
+                  expect {
+                    do_attack
+                  }.to change { target.battle }.from(nil).to(Battle::Base)
+                end
+              end
+
+              context 'when immunity is still active' do
+                it 'fails to execute attack' do
+                  expect {
+                    do_attack
+                  }.to_not change { target.battle }
+                end
+              end
             end
           end
         end
@@ -201,6 +234,8 @@ RSpec.describe CombatEngine::Character::Facade do
           ).to eq(:successful)
         end
       end
+
+
     end
   end
 end
