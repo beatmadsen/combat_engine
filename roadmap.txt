@@ -34,8 +34,17 @@ Game loop updates all characters each turn
 regardless of their inclusion in battles
 -----------------
 
-Step 6: (✓)
+Step 6: (✗)
 Battle with 3 teams
+
+  Step 6.1: (✓)
+  Participation from multiple teams in one battle
+
+  Step 6.2: (✗)
+  Battle continues when only two teams have surviving characters;
+  Battle does not stop if one of two remaining teams dies,
+  but other team got revived in the meanwhile
+
 -----------------
 
 Step 7: (✗)
@@ -50,7 +59,7 @@ Step 7: (✗)
   Step 7.3: (✓)
   Add a warding effect that cancels the next incoming attack action
 
-  Step 7.4: (✗)
+  Step 7.4: (✓)
   Add a battle observing effect that triggers another, shielding effect
   on same character when a battle is won.
   Observe that all attacks against subject fails for 5 seconds
@@ -77,5 +86,5 @@ Make battle resolution rules pluggable
 -----------------
 
 Step n: (✗)
-Make action lookup pluggable
+De-couple entities to allow for different concurrency models
 =================

@@ -103,7 +103,7 @@ RSpec.describe CombatEngine::Character::Facade do
 
           context 'when target gets immunity after winning a battle' do
             before do
-              target.receive_effect(factory: ImmunityOnWinEffect)
+              target.receive_effect(factory: Examples::ImmunityOnWinEffect)
             end
 
             context 'when target just won a battle' do
@@ -114,20 +114,25 @@ RSpec.describe CombatEngine::Character::Facade do
 
               context 'when immunity time has passed' do
                 before do
-                  target_unwrapped.update(ImmunityEffect::DURATION)
+                  target_unwrapped.update(
+                    Examples::ImmunityEffect::DURATION + 1
+                  )
                 end
                 it 'initiates a new battle' do
-                  expect {
+                  expect do
                     do_attack
-                  }.to change { target.battle }.from(nil).to(Battle::Base)
+                  end.to(
+                    change { target.battle }.from(nil)
+                      .to(CombatEngine::Battle::Base)
+                  )
                 end
               end
 
               context 'when immunity is still active' do
                 it 'fails to execute attack' do
-                  expect {
+                  expect do
                     do_attack
-                  }.to_not change { target.battle }
+                  end.to_not(change { target.battle })
                 end
               end
             end
@@ -234,8 +239,6 @@ RSpec.describe CombatEngine::Character::Facade do
           ).to eq(:successful)
         end
       end
-
-
     end
   end
 end

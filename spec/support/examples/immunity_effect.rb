@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 module Examples
-  # A tank effect that protects target by sharing damage with tank (source)
-  class WardingEffect < CombatEngine::Effect::Base
-    LIFETIME = 200
+  # All adversarial effects fail. No source.
+  class ImmunityEffect < CombatEngine::Effect::Base
+    DURATION = 200
 
     def self.create_effect(**options)
       new(**options)
     end
 
-    def initialize(source:, target:, **)
-      super(source: source, target: target, lifetime: LIFETIME)
+    def initialize(target:, **)
+      super(target: target, lifetime: DURATION)
     end
 
     def before_action(**options)

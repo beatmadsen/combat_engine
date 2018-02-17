@@ -13,7 +13,6 @@ module Examples
 
     def initialize(source:, target:, **)
       super(source: source, target: target, lifetime: CHARGES * INTERVAL)
-      @run_time = 0
       @remaining_charges = CHARGES
     end
 

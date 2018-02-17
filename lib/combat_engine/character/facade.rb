@@ -24,7 +24,8 @@ module CombatEngine
       def_delegators :effect_runner,
                      :before_damage, :after_damage,
                      :before_action, # see after_action below
-                     :before_healing, :after_healing
+                     :before_healing, :after_healing,
+                     :after_battle_won, :after_battle_lost
 
       private :effect_runner, :action_runner,
               :damage_machine, :healing_machine,

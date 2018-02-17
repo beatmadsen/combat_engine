@@ -40,6 +40,14 @@ module CombatEngine
       def after_action(**options)
         @effects.each { |e| e.after_action(**options) }
       end
+
+      def after_battle_won(**options)
+        @effects.each { |e| e.after_battle_won(**options) }
+      end
+
+      def after_battle_lost(**options)
+        @effects.each { |e| e.after_battle_lost(**options) }
+      end
     end
   end
 end
