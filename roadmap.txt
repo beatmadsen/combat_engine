@@ -40,10 +40,8 @@ Battle with 3 teams
   Step 6.1: (✓)
   Participation from multiple teams in one battle
 
-  Step 6.2: (✗)
-  Battle continues when only two teams have surviving characters;
-  Battle does not stop if one of two remaining teams dies,
-  but other team got revived in the meanwhile
+  Step 6.2: (✓)
+  Battle continues when only two teams have surviving characters
 
 -----------------
 
