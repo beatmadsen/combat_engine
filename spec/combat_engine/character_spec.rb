@@ -64,5 +64,27 @@ RSpec.describe CombatEngine::Character::Facade do
         end
       end
     end
+
+    context 'when character has an active strength reduction' do
+      let(:enemy) { Examples::Character.new(team: :b, hp: 12).combat_facade }
+      let(:initial_strength) { character.attribute(:strenght) }
+      before do
+        enemy.fire_action(factory: Examples::StrenghtAction, target: character)
+      end
+      context 'when running time is less than lifetime' do
+        it 'maintains reduced strenght' do
+          update(Examples::StrenghtEffect::DURATION - 1)
+          expect(character.attribute(:strength)).to be < initial_strength
+        end
+      end
+
+      context 'when running time surpases effect lifetime' do
+        it 'restores initial strength' do
+          expect {
+            update(Examples::StrenghtEffect::DURATION + 1)
+          }.to change { character.attribute(:strength) }.to initial_strength
+        end
+      end
+    end
   end
 end
