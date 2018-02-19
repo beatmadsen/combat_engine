@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module CombatEngine
-  # Effect module contains TODO
+  # Effect module contains effect implementations and supporting classes
   module Effect
     # Base should be subclassed to make custom actions
     class Base
@@ -14,7 +14,13 @@ module CombatEngine
         @permanent = options.fetch(:permanent, false)
         @lifetime = options[:lifetime]
         @run_time = 0
+        @running = true
+        after_init
       end
+
+      def after_init; end
+
+      def on_completion; end
 
       def before_damage(**options); end
 
@@ -40,6 +46,14 @@ module CombatEngine
       # Arg is time elapsed since last tick.
       def update(elapsed_time)
         @run_time += elapsed_time
+        complete if @running && !active?
+      end
+
+      private
+
+      def complete
+        @running = false
+        on_completion
       end
     end
   end

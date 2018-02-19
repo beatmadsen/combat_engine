@@ -34,6 +34,9 @@ module CombatEngine
       def initialize(adapter:, state:)
         @adapter = adapter
         @state = state
+        @attributes = Hash.new do |hash, key|
+          hash[key] = Attribute.new(name: key, adapter: adapter)
+        end
       end
 
       def after_action(**options)
@@ -62,10 +65,9 @@ module CombatEngine
       end
 
       def fire_action(factory:, **options)
-        os = options.slice(:target, :targets).merge!(source: self)
-        action = factory.create_action(os)
+        action = factory.create_action(options.merge(source: self))
         action_runner.set(action)
-        cs = os.values.flatten
+        cs = options.values_at(:target, :targets, :source).flatten.compact
         cs.each { |c| c.before_action(action: action) }
         action_runner.execute
         cs.each { |c| c.after_action(action: action) }
@@ -93,18 +95,29 @@ module CombatEngine
         action_circuit_breaker.break
       end
 
+      def add_modifier(attribute:, modifier:)
+        @attributes[attribute].add_modifier(modifier)
+      end
+
+      def remove_modifier(attribute:, modifier:)
+        # TODO: figure out args.
+        @attributes[attribute].remove_modifier(
+          type: modifier.type, unique_key: modifier.unique_key
+        )
+      end
+
       private
 
       def apply_accumulated_healing(attribute:)
         amount = healing_machine.total(attribute: attribute)
         healing_machine.reset(attribute: attribute)
-        @adapter.modify(attribute: attribute, delta: amount)
+        @attributes[attribute].change_by(amount)
       end
 
       def apply_accumulated_damage(attribute:)
         amount = damage_machine.total(attribute: attribute)
         damage_machine.reset(attribute: attribute)
-        @adapter.modify(attribute: attribute, delta: -amount)
+        @attributes[attribute].change_by(-amount)
       end
     end
   end

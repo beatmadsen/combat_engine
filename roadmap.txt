@@ -63,8 +63,9 @@ Step 7: (✗)
   Observe that all attacks against subject fails for 5 seconds
   after the battle was won.
 
-  Step 7.5: (✗)
-  Add a temporary strength reducing effect
+  Step 7.5: (✓)
+  Add a temporary strength reducing effect;
+  Reductions can be stacked unless they're explicitly unique.
 
   Step 7.6: (✗)
   Dispel effect

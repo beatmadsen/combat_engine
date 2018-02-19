@@ -5,7 +5,7 @@ module CombatEngine
   module Action
     # Base should be subclassed to make custom actions
     class MultipleTarget < Base
-      def initialize(source:, targets:)
+      def initialize(source:, targets:, **)
         super(source: source)
         @targets = targets
       end

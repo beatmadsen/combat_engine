@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe CombatEngine::Character::Facade do
+RSpec.describe CombatEngine::Character do
   let(:character_unwrapped) { Examples::Character.new(team: :a, hp: 100) }
   let(:character) { character_unwrapped.combat_facade }
 
@@ -65,24 +65,69 @@ RSpec.describe CombatEngine::Character::Facade do
       end
     end
 
-    context 'when character has an active strength reduction' do
+    # TODO: test stacking of effect
+    context 'when character has a strength attribute' do
       let(:enemy) { Examples::Character.new(team: :b, hp: 12).combat_facade }
-      let(:initial_strength) { character.attribute(:strenght) }
-      before do
-        enemy.fire_action(factory: Examples::StrenghtAction, target: character)
-      end
-      context 'when running time is less than lifetime' do
-        it 'maintains reduced strenght' do
-          update(Examples::StrenghtEffect::DURATION - 1)
-          expect(character.attribute(:strength)).to be < initial_strength
+      let!(:initial_strength) { character.attribute(:strength) }
+
+      context 'when character has an active strength reduction' do
+        let(:duration) { 200 }
+        before do
+          enemy.fire_action(
+            factory: Examples::StrengthAction,
+            target: character,
+            duration: duration
+          )
+        end
+        context 'when running time is less than lifetime' do
+          it 'maintains reduced strength' do
+            character_unwrapped.update(duration - 1)
+            expect(character.attribute(:strength)).to be < initial_strength
+          end
+        end
+
+        context 'when running time surpases effect lifetime' do
+          it 'restores initial strength' do
+            expect do
+              character_unwrapped.update(duration + 1)
+            end.to change { character.attribute(:strength) }.to initial_strength
+          end
         end
       end
-
-      context 'when running time surpases effect lifetime' do
-        it 'restores initial strength' do
-          expect {
-            update(Examples::StrenghtEffect::DURATION + 1)
-          }.to change { character.attribute(:strength) }.to initial_strength
+      context 'when character has two active strength reductions' do
+        let(:durations) { [200, 100] }
+        let(:f) { Examples::StrengthEffect::FACTOR }
+        before do
+          durations.each do |d|
+            enemy.fire_action(
+              factory: Examples::StrengthAction,
+              target: character,
+              duration: d
+            )
+          end
+        end
+        context 'when running time is less than either lifetime' do
+          it 'stacks the modifiers' do
+            character_unwrapped.update(durations.min - 1)
+            expect(character.attribute(:strength)).to(
+              eq(initial_strength * f * f)
+            )
+          end
+        end
+        context 'when running time is in between the two lifetimes' do
+          it 'maintains reduced strength from remaining modifier' do
+            character_unwrapped.update(durations.min + 1)
+            expect(character.attribute(:strength)).to(
+              eq(initial_strength * f)
+            )
+          end
+        end
+        context 'when running time surpases both lifetimes' do
+          it 'restores initial strength' do
+            expect do
+              character_unwrapped.update(durations.max + 1)
+            end.to change { character.attribute(:strength) }.to initial_strength
+          end
         end
       end
     end

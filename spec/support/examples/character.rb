@@ -6,7 +6,7 @@ module Examples
     include CombatEngine::Character
 
     attr_reader :team
-    attr_accessor :hp
+    attr_accessor :hp, :base_hp, :strength, :base_strength
 
     class CombatAdapter
       extend Forwardable
@@ -17,14 +17,31 @@ module Examples
         @character = character
       end
 
+      # TODO
       def attribute(a)
-        return unless a == :hp
-        @character.hp
+        current_value(attribute: a)
       end
 
-      def modify(attribute:, delta:)
-        return unless attribute == :hp
-        @character.hp += delta
+      def current_value(attribute:)
+        case attribute
+        when :hp, :strength
+          @character.send(attribute)
+        end
+      end
+
+      def base_value(attribute:)
+        case attribute
+        when :hp, :strength
+          a = ['base_', attribute].join
+          @character.send(a)
+        end
+      end
+
+      def update(attribute:, value:)
+        case attribute
+        when :hp then @character.hp = value
+        when :strength then @character.strength = value
+        end
       end
 
       def fit_for_battle?
@@ -32,9 +49,10 @@ module Examples
       end
     end
 
-    def initialize(team:, hp:)
+    def initialize(team:, hp:, strength: 100)
       @team = team
-      @hp = hp
+      @hp = @base_hp = hp
+      @strength = @base_strength = strength
     end
 
     def combat_adapter
