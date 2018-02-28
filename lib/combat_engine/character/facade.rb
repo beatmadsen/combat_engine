@@ -25,7 +25,8 @@ module CombatEngine
                      :before_damage, :after_damage,
                      :before_action, # see after_action below
                      :before_healing, :after_healing,
-                     :after_battle_won, :after_battle_lost
+                     :after_battle_won, :after_battle_lost,
+                     :active_effects, :cancel_effect
 
       private :effect_runner, :action_runner,
               :damage_machine, :healing_machine,

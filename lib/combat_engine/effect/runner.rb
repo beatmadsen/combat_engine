@@ -17,6 +17,10 @@ module CombatEngine
         @effects.keep_if(&:active?)
       end
 
+      def active_effects
+        @effects.select(&:active?)
+      end
+
       def before_damage(**options)
         @effects.each { |e| e.before_damage(**options) }
       end

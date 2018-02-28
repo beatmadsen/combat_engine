@@ -67,7 +67,7 @@ Step 7: (✗)
   Add a temporary strength reducing effect;
   Reductions can be stacked unless they're explicitly unique.
 
-  Step 7.6: (✗)
+  Step 7.6: (✓)
   Dispel effect
 
   Step 7.7: (✗)

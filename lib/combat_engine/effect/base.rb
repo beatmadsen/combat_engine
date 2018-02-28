@@ -38,15 +38,19 @@ module CombatEngine
 
       def after_battle_lost(**options); end
 
+      def cancel
+        complete if @running && !@permanent
+      end
+
       def active?
-        @permanent || (@run_time <= @lifetime)
+        @running && (@permanent || @run_time <= @lifetime)
       end
 
       # Update effect state.
       # Arg is time elapsed since last tick.
       def update(elapsed_time)
         @run_time += elapsed_time
-        complete if @running && !active?
+        complete unless active?
       end
 
       private

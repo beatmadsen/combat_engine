@@ -51,6 +51,30 @@ RSpec.describe CombatEngine::Character::Facade do
           end
         end
 
+        context 'when target has an active strength effect' do
+          before do
+            target.receive_effect(
+              factory: Examples::StrengthEffect, source: target, duration: 100
+            )
+          end
+          context 'when dispelling effect from target' do
+            # emulate that an effect was selected via some representation in GUI
+            let(:strength_effect) { target.active_effects.first }
+            def do_dispel
+              character.fire_action(
+                factory: Examples::Dispel,
+                target: target,
+                effect: strength_effect
+              )
+            end
+            it 'removes strenght modifier from target' do
+              expect { do_dispel }.to(
+                change { target.attribute(:strength) }.from(90).to(100)
+              )
+            end
+          end
+        end
+
         def do_attack
           character.fire_action(factory: Examples::Attack, target: target)
         end
