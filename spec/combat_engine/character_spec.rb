@@ -65,7 +65,50 @@ RSpec.describe CombatEngine::Character do
       end
     end
 
-    # TODO: test stacking of effect
+    context 'when character has two beneficial effects' do
+      E = Examples
+      let(:friend) { E::Character.new(team: :a, hp: 100).combat_facade }
+      let(:durations) do
+        [
+          E::WardingEffect::LIFETIME,
+          E::TankProtectionEffect::LIFETIME,
+        ]
+      end
+      before do
+        [E::WardingAction, E::TankProtectionAction].each do |f|
+          friend.fire_action(factory: f, target: character)
+        end
+      end
+
+      def do_update
+        character_unwrapped.update(running_time)
+      end
+
+      context 'when running time is in between the two lifetimes' do
+        let(:running_time) { durations.min + 1 }
+        context 'and we don\'t prolong effects' do
+          it 'only has one active effect' do
+            do_update
+            byebug
+            expect(character.active_effects).to be_one
+          end
+        end
+
+        context 'and we prolong effects' do
+          before do
+            character.fire_action(
+              factory: Examples::ProlongBeneficial,
+              target: character
+            )
+          end
+          it 'retains both beneficial effects' do
+            do_update
+            expect(character.active_effects.size).to eq(2)
+          end
+        end
+      end
+    end
+
     context 'when character has a strength attribute' do
       let(:enemy) { Examples::Character.new(team: :b, hp: 12).combat_facade }
       let!(:initial_strength) { character.attribute(:strength) }

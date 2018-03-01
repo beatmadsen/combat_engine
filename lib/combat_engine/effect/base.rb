@@ -46,6 +46,10 @@ module CombatEngine
         @running && (@permanent || @run_time <= @lifetime)
       end
 
+      def adversarial?
+        true
+      end
+
       # Update effect state.
       # Arg is time elapsed since last tick.
       def update(elapsed_time)

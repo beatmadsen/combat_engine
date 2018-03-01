@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Examples
-  # All adversarial effects fail. No source.
+  # All adversarial actions fail. No source.
   class ImmunityEffect < CombatEngine::Effect::Base
     DURATION = 200
 
