@@ -72,11 +72,20 @@ RSpec.describe CombatEngine::Battle do
           Examples::Character.new(team: team, hp: 10).combat_facade
         end
       end
-      it 'allows them all to participate in same battle' do
-        described_class.start_or_join(participants: characters)
-        active_battles = characters.map(&:battle)
-        first_battle = characters.first.battle
-        expect(active_battles).to match_array([first_battle] * characters.size)
+
+      # TODO: what if party members are not from same team?
+      context 'when some team members are in parties' do
+        it 'adds team members along with their parties on same side' do
+          raise 'no'
+        end
+      end
+      context 'when there are no parties' do
+        it 'allows them all to participate in same battle' do
+          described_class.start_or_join(participants: characters)
+          active_battles = characters.map(&:battle)
+          first_battle = characters.first.battle
+          expect(active_battles).to match_array([first_battle] * characters.size)
+        end
       end
     end
   end

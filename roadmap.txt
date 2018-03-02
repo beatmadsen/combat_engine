@@ -45,7 +45,7 @@ Battle with 3 teams
 
 -----------------
 
-Step 7: (✗)
+Step 7: (✓)
 
   Step 7.1: (✓)
   Add a DOT effect and see targets take damage periodically
@@ -75,9 +75,14 @@ Step 7: (✗)
 -----------------
 
 Step 8: (✗)
-Parties; whenever a character joins a battle, their whole party joins.
-Can characters be part of multiple battles?
-If no, what happens when only part of party is eligible to join?
+Parties
+
+  Step 8.1 (✗)
+  Whenever a character joins a battle, their whole party joins.
+
+  Step 8.2 (✗)
+  Party-wide effects
+
 -----------------
 
 Step n-1: (✗)
