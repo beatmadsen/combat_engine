@@ -50,6 +50,16 @@ module CombatEngine
         true
       end
 
+      def remaining_time=(addend)
+        return if @permanent
+        @lifetime = @run_time + addend
+      end
+
+      def remaining_time
+        return if @permanent
+        @lifetime - @run_time
+      end
+
       # Update effect state.
       # Arg is time elapsed since last tick.
       def update(elapsed_time)

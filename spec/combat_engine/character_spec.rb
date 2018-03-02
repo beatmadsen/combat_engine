@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe CombatEngine::Character do
-  let(:character_unwrapped) { Examples::Character.new(team: :a, hp: 100) }
+  E = Examples
+  let(:character_unwrapped) { E::Character.new(team: :a, hp: 100) }
   let(:character) { character_unwrapped.combat_facade }
 
   describe '#update' do
     context 'when character has an active DOT effect' do
-      let(:dot_interval) { Examples::DotEffect::INTERVAL }
+      let(:dot_interval) { E::DotEffect::INTERVAL }
       let(:dot_damage) do
         # damage per charge/activation
-        Examples::DotEffect::DAMAGE
+        E::DotEffect::DAMAGE
       end
-      let(:dot_charges) { Examples::DotEffect::CHARGES }
-      let(:enemy) { Examples::Character.new(team: :b, hp: 12).combat_facade }
+      let(:dot_charges) { E::DotEffect::CHARGES }
+      let(:enemy) { E::Character.new(team: :b, hp: 12).combat_facade }
       before do
-        enemy.fire_action(factory: Examples::DotAttack, target: character)
+        enemy.fire_action(factory: E::DotAttack, target: character)
       end
       context 'when elapsed time is greater than DOT damage interval' do
         let(:elapsed_time) { dot_interval + 1 }
@@ -66,7 +67,6 @@ RSpec.describe CombatEngine::Character do
     end
 
     context 'when character has two beneficial effects' do
-      E = Examples
       let(:friend) { E::Character.new(team: :a, hp: 100).combat_facade }
       let(:durations) do
         [
@@ -89,7 +89,6 @@ RSpec.describe CombatEngine::Character do
         context 'and we don\'t prolong effects' do
           it 'only has one active effect' do
             do_update
-            byebug
             expect(character.active_effects).to be_one
           end
         end
@@ -97,7 +96,7 @@ RSpec.describe CombatEngine::Character do
         context 'and we prolong effects' do
           before do
             character.fire_action(
-              factory: Examples::ProlongBeneficial,
+              factory: E::ProlongBeneficial,
               target: character
             )
           end
@@ -110,14 +109,14 @@ RSpec.describe CombatEngine::Character do
     end
 
     context 'when character has a strength attribute' do
-      let(:enemy) { Examples::Character.new(team: :b, hp: 12).combat_facade }
+      let(:enemy) { E::Character.new(team: :b, hp: 12).combat_facade }
       let!(:initial_strength) { character.attribute(:strength) }
 
       context 'when character has an active strength reduction' do
         let(:duration) { 200 }
         before do
           enemy.fire_action(
-            factory: Examples::StrengthAction,
+            factory: E::StrengthAction,
             target: character,
             duration: duration
           )
@@ -139,11 +138,11 @@ RSpec.describe CombatEngine::Character do
       end
       context 'when character has two active strength reductions' do
         let(:durations) { [200, 100] }
-        let(:f) { Examples::StrengthEffect::FACTOR }
+        let(:f) { E::StrengthEffect::FACTOR }
         before do
           durations.each do |d|
             enemy.fire_action(
-              factory: Examples::StrengthAction,
+              factory: E::StrengthAction,
               target: character,
               duration: d
             )

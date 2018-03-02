@@ -7,7 +7,7 @@ module CombatEngine
     class Base
       attr_reader :status
 
-      def initialize(source:)
+      def initialize(source:, **)
         @source = source
         @status = :waiting
       end

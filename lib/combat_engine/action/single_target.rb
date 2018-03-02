@@ -6,7 +6,7 @@ module CombatEngine
     # Base should be subclassed to make custom actions
     class SingleTarget < Base
       def initialize(source:, target:, **)
-        super(source: source)
+        super
         @target = target
       end
 

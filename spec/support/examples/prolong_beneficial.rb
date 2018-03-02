@@ -7,6 +7,10 @@ module Examples
       new(**options)
     end
 
+    def adversarial?
+      false
+    end
+
     protected
 
     def on_execute

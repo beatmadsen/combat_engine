@@ -13,6 +13,10 @@ module Examples
       super(source: source, target: target, lifetime: LIFETIME)
     end
 
+    def adversarial?
+      false
+    end
+
     def before_action(**options)
       adversarial = options[:action].adversarial?
       @target.fail_incoming_action if adversarial

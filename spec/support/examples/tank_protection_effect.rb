@@ -13,6 +13,10 @@ module Examples
       super(source: source, target: target, lifetime: LIFETIME)
     end
 
+    def adversarial?
+      false
+    end
+
     def before_damage(**options)
       os = options.slice(:attribute, :amount)
       os[:amount] *= 0.5
