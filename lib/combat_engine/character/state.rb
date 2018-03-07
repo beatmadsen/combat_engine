@@ -4,8 +4,7 @@ module CombatEngine
   module Character
     # Data structure that holds state for characters
     class State
-      attr_reader :team, :attributes,
-                  :action_runner, :effect_runner,
+      attr_reader :action_runner, :effect_runner,
                   :damage_machine, :healing_machine,
                   :action_circuit_breaker
 

@@ -79,7 +79,7 @@ RSpec.describe CombatEngine::Battle do
       # NB: since players can join battle later, their side needs to
       # be evaluated according to same rules
       context 'when some team members are in parties' do
-        it 'adds team members along with their parties on same side' do
+        xit 'adds team members along with their parties on same side' do
           raise 'no'
         end
       end

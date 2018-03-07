@@ -15,7 +15,7 @@ module CombatEngine
         @battles.delete(b)
       end
 
-      # idempotent: does nothing if mathing battle already exists
+      # idempotent: does nothing if matching battle already exists
       def start_or_join(participants:)
         active_battles = active_battles(participants)
         if active_battles.one?

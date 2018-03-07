@@ -13,7 +13,7 @@ module CombatEngine
       def_delegators :@state,
                      :effect_runner, :action_runner,
                      :damage_machine, :healing_machine,
-                     :action_circuit_breaker
+                     :action_circuit_breaker, :party
 
       def_delegators :damage_machine,
                      :increase_damage, :reduce_damage, :multiply_damage
@@ -105,6 +105,14 @@ module CombatEngine
         @attributes[attribute].remove_modifier(
           type: modifier.type, unique_key: modifier.unique_key
         )
+      end
+
+      def join_party(friend)
+        Party.create_or_join(members: [self, friend])
+      end
+
+      def party
+        Party.lookup(character: self)
       end
 
       private
