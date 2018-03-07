@@ -265,4 +265,26 @@ RSpec.describe CombatEngine::Character::Facade do
       end
     end
   end
+
+  describe '#join_party' do
+    let(:friend) { create_character(team: :a, hp: 100).combat_facade }
+    context 'when friend is not already in a party' do
+      it 'creates a new party' do
+        expect do
+          character.join_party(friend)
+        end.to change { character.party }.from(nil).to(CombatEngine::Party)
+      end
+
+      it 'adds friend to the new party' do
+        character.join_party(friend)
+        expect(friend.party).to eq(character.party)
+      end
+    end
+
+    context 'when friend is already in a party' do
+      it 'adds character to friend\'s party' do
+        raise 'no'
+      end
+    end
+  end
 end

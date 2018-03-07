@@ -74,6 +74,10 @@ RSpec.describe CombatEngine::Battle do
       end
 
       # TODO: what if party members are not from same team?
+      # Idea: Party takes precedence when identifying
+      # which side a player belongs to in a battle
+      # NB: since players can join battle later, their side needs to
+      # be evaluated according to same rules
       context 'when some team members are in parties' do
         it 'adds team members along with their parties on same side' do
           raise 'no'

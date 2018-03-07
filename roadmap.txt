@@ -78,9 +78,18 @@ Step 8: (✗)
 Parties
 
   Step 8.1 (✗)
-  Whenever a character joins a battle, their whole party joins.
+  Join or create a party. Invite logic assumed external.
 
   Step 8.2 (✗)
+  Leave a party. Possible during battle?
+
+  Step 8.3 (✗)
+  Multi-party battles. Party team dictates side.
+
+  Step 8.4 (✗)
+  Whenever a character joins a battle, their whole party joins same side.
+
+  Step 8.5 (✗)
   Party-wide effects
 
 -----------------
