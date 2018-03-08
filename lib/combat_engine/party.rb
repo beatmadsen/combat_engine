@@ -20,6 +20,10 @@ module CombatEngine
           raise 'found multiple parties'
         end
       end
+
+      def remove_member(m)
+        lookup(character: m).remove_member(m)
+      end
     end
 
     def initialize(members:)
@@ -29,6 +33,11 @@ module CombatEngine
 
     def add_members(*ms)
       @members.merge(ms)
+    end
+
+    def remove_member(m)
+      @members.delete(m)
+      @members.clear if @members.one?
     end
 
     def member?(m)

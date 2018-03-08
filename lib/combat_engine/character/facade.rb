@@ -111,6 +111,10 @@ module CombatEngine
         Party.create_or_join(members: [self, friend])
       end
 
+      def leave_party
+        Party.remove_member(self)
+      end
+
       def party
         Party.lookup(character: self)
       end

@@ -282,13 +282,52 @@ RSpec.describe CombatEngine::Character::Facade do
     end
 
     context 'when friend is already in a party' do
-      let (:other_friend) { create_character(team: :a, hp: 5).combat_facade }
+      let(:other_friend) { create_character(team: :a, hp: 5).combat_facade }
       before do
         friend.join_party(other_friend)
       end
       it 'adds character to friend\'s party' do
         character.join_party(friend)
         expect(character.party).to eq(other_friend.party)
+      end
+    end
+  end
+
+  describe '#leave_party' do
+    before do
+      friends.each { |f| f.join_party(character) }
+    end
+    context 'when two people are in the party' do
+      let(:friends) { [create_character(team: :a, hp: 1).combat_facade] }
+
+      it 'removes the one player' do
+        expect do
+          character.leave_party
+        end.to change { character.party }.from(CombatEngine::Party).to(nil)
+      end
+
+      it 'disbands the party' do
+        character.leave_party
+        expect(friends.first.party).to be_nil
+      end
+    end
+
+    context 'when three or more people are in the party' do
+      let(:friends) do
+        (1..5).map { create_character(team: :a, hp: 1).combat_facade }
+      end
+
+      it 'removes the one player' do
+        expect do
+          character.leave_party
+        end.to change { character.party }.from(CombatEngine::Party).to(nil)
+      end
+
+      it 'keeps the others in the party' do
+        character.leave_party
+        expect(friends.map(&:party)).to match_array(
+          [friends.first.party] * friends.size
+        )
       end
     end
   end
