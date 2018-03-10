@@ -80,7 +80,7 @@ Parties
   Step 8.1 (✓)
   Join or create a party. Invite logic assumed external.
 
-  Step 8.2 (✗)
+  Step 8.2 (✓)
   Leave a party. Possible during battle?
 
   Step 8.3 (✗)

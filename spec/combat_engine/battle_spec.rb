@@ -88,7 +88,9 @@ RSpec.describe CombatEngine::Battle do
           described_class.start_or_join(participants: characters)
           active_battles = characters.map(&:battle)
           first_battle = characters.first.battle
-          expect(active_battles).to match_array([first_battle] * characters.size)
+          expect(active_battles).to match_array(
+            [first_battle] * characters.size
+          )
         end
       end
     end

@@ -13,7 +13,7 @@ module CombatEngine
       def_delegators :@state,
                      :effect_runner, :action_runner,
                      :damage_machine, :healing_machine,
-                     :action_circuit_breaker, :party
+                     :action_circuit_breaker
 
       def_delegators :damage_machine,
                      :increase_damage, :reduce_damage, :multiply_damage
@@ -22,9 +22,7 @@ module CombatEngine
                      :increase_healing, :reduce_healing, :multiply_healing
 
       def_delegators :effect_runner,
-                     :before_damage, :after_damage,
                      :before_action, # see after_action below
-                     :before_healing, :after_healing,
                      :after_battle_won, :after_battle_lost,
                      :active_effects, :cancel_effect
 
@@ -49,29 +47,30 @@ module CombatEngine
         Battle.lookup(character: self)
       end
 
+      # TODO: this logic seems to belong elsewhere
       def damage(attribute:, amount:)
         options = { attribute: attribute, amount: amount }
-        before_damage(**options)
+        effect_runner.before_damage(**options)
         increase_damage(**options)
         apply_accumulated_damage(attribute: attribute)
-        after_damage(**options)
+        effect_runner.after_damage(**options)
       end
 
       def heal(attribute:, amount:)
         options = { attribute: attribute, amount: amount }
-        before_healing(**options)
+        effect_runner.before_healing(**options)
         increase_healing(**options)
         apply_accumulated_healing(attribute: attribute)
-        after_healing(**options)
+        effect_runner.after_healing(**options)
       end
 
       def fire_action(factory:, **options)
         action = factory.create_action(options.merge(source: self))
         action_runner.set(action)
         cs = options.values_at(:target, :targets, :source).flatten.compact
-        cs.each { |c| c.before_action(action: action) }
+        cs.each { |character| character.before_action(action: action) }
         action_runner.execute
-        cs.each { |c| c.after_action(action: action) }
+        cs.each { |character| character.after_action(action: action) }
       end
 
       def accept_action?(_a)

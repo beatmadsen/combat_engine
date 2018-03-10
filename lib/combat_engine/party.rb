@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module CombatEngine
+  # A party is a group of characters that have opted to fight together
   class Party
     @parties = Set.new
     class << self
