@@ -89,7 +89,7 @@ RSpec.describe CombatEngine::Battle do
             described_class.start_or_join(participants: characters)
           end.to(
             change { first_guy.battle_allies }
-              .from(nil)
+              .from([])
               .to(party_members - [first_guy])
           )
         end

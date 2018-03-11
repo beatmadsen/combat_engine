@@ -6,7 +6,7 @@ module CombatEngine
     class Base
       extend Forwardable
 
-      def_delegators :@state, :participant?, :add_participants
+      def_delegators :@state, :participant?, :add_participants, :allies
 
       def initialize(participants:)
         @state = RunningState.new(

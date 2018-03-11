@@ -10,6 +10,8 @@ require_relative 'combat_engine/party'
 require_relative 'combat_engine/utility'
 require_relative 'combat_engine/version'
 
+require 'securerandom'
+
 # CombatEngine does bla TODO
 module CombatEngine
 

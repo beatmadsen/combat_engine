@@ -8,18 +8,17 @@ module CombatEngine
         @before_ending = before_ending
         @winners = winners
         @losers = losers
-        @done = false
       end
 
       def participant?(character); end
 
       def add_participants(*characters); end
 
+      def allies; []; end
+
       def advance(_elapsed_time)
-        return self if @done
         end_battle
-        @done = true
-        self
+        DoneState.new
       end
 
       private

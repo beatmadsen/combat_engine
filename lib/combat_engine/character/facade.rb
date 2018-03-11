@@ -8,7 +8,7 @@ module CombatEngine
       extend Forwardable
 
       def_delegators :@adapter,
-                     :fit_for_battle?, :attribute, :team
+                     :fit_for_battle?, :attribute
 
       def_delegators :@state,
                      :effect_runner, :action_runner,
@@ -48,7 +48,11 @@ module CombatEngine
       end
 
       def battle_allies
-        batlle&.allies(self).to_a
+        battle&.allies(self).to_a
+      end
+
+      def team
+        (party || @adapter).team
       end
 
       # TODO: this logic seems to belong elsewhere

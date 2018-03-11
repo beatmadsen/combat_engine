@@ -44,5 +44,9 @@ module CombatEngine
     def member?(m)
       @members.include?(m)
     end
+
+    def team
+      :flurg
+    end
   end
 end

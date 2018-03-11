@@ -11,6 +11,12 @@ module CombatEngine
         @before_ending = before_ending
       end
 
+      def allies(character)
+        @teams.find(-> { [0, []] }) { |_, members| members.include?(character) }
+              .last
+              .reject { |member| member == character }
+      end
+
       def participant?(character)
         @teams[character.team].include?(character)
       end
