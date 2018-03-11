@@ -14,5 +14,4 @@ require 'securerandom'
 
 # CombatEngine does bla TODO
 module CombatEngine
-
 end

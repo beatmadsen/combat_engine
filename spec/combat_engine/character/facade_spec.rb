@@ -271,12 +271,12 @@ RSpec.describe CombatEngine::Character::Facade do
     context 'when friend is not already in a party' do
       it 'creates a new party' do
         expect do
-          character.join_party(friend)
+          character.join_party(friend) { :party }
         end.to change { character.party }.from(nil).to(CombatEngine::Party)
       end
 
       it 'adds friend to the new party' do
-        character.join_party(friend)
+        character.join_party(friend) { :party }
         expect(friend.party).to eq(character.party)
       end
     end
@@ -284,10 +284,10 @@ RSpec.describe CombatEngine::Character::Facade do
     context 'when friend is already in a party' do
       let(:other_friend) { create_character(team: :a, hp: 5).combat_facade }
       before do
-        friend.join_party(other_friend)
+        friend.join_party(other_friend) { :party }
       end
       it 'adds character to friend\'s party' do
-        character.join_party(friend)
+        character.join_party(friend) { raise 'should not happen' }
         expect(character.party).to eq(other_friend.party)
       end
     end
@@ -295,7 +295,7 @@ RSpec.describe CombatEngine::Character::Facade do
 
   describe '#leave_party' do
     before do
-      friends.each { |f| f.join_party(character) }
+      friends.each { |f| f.join_party(character) { :party } }
     end
     context 'when two people are in the party' do
       let(:friends) { [create_character(team: :a, hp: 1).combat_facade] }

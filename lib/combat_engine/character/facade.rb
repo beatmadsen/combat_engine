@@ -114,8 +114,8 @@ module CombatEngine
         )
       end
 
-      def join_party(friend)
-        Party.create_or_join(members: [self, friend])
+      def join_party(friend, &block)
+        Party.create_or_join(members: [self, friend], &block)
       end
 
       def leave_party

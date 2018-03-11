@@ -14,7 +14,7 @@ module CombatEngine
                          .tap(&:compact!)
                          .to_set
         if parties.empty?
-          @parties << Party.new(members: members)
+          @parties << Party.new(members: members, team: yield)
         elsif parties.one?
           parties.first.add_members(*members)
         else
@@ -27,8 +27,11 @@ module CombatEngine
       end
     end
 
-    def initialize(members:)
+    attr_reader :team
+
+    def initialize(members:, team:)
       @members = Set.new
+      @team = team
       add_members(*members)
     end
 
@@ -43,10 +46,6 @@ module CombatEngine
 
     def member?(m)
       @members.include?(m)
-    end
-
-    def team
-      :flurg
     end
   end
 end

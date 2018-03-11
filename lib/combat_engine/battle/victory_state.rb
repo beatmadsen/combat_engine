@@ -14,7 +14,9 @@ module CombatEngine
 
       def add_participants(*characters); end
 
-      def allies; []; end
+      def allies
+        []
+      end
 
       def advance(_elapsed_time)
         end_battle

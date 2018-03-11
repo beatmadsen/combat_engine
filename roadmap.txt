@@ -83,7 +83,7 @@ Parties
   Step 8.2 (✓)
   Leave a party. Possible during battle?
 
-  Step 8.3 (✗)
+  Step 8.3 (✓)
   Multi-party battles. Party team dictates side.
 
   Step 8.4 (✗)

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Examples
   # Triggers an immunity effect when target wins a battle
   class ImmunityOnWinEffect < CombatEngine::Effect::Base

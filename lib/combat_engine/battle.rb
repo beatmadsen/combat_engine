@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'battle/base'
 require_relative 'battle/done_state'
 require_relative 'battle/running_state'

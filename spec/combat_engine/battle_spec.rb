@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe CombatEngine::Battle do
   describe '.update' do
     before do
@@ -79,8 +80,11 @@ RSpec.describe CombatEngine::Battle do
       # be evaluated according to same rules
       context 'when some team members are in parties' do
         let(:party_members) { characters.take(3) }
+        let(:enemy_party) { characters.last(4) }
         before do
-          CombatEngine::Party.create_or_join(members: party_members)
+          c = CombatEngine
+          c::Party.create_or_join(members: party_members) { :good_guys }
+          c::Party.create_or_join(members: enemy_party) { :bad_guys }
         end
         let(:first_guy) { party_members.first }
 

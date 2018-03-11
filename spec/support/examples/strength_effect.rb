@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Examples
   # All adversarial effects fail. No source.
   class StrengthEffect < CombatEngine::Effect::Base

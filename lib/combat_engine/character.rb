@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'character/attribute'
 require_relative 'character/damage_machine'
 require_relative 'character/delta_modifier'

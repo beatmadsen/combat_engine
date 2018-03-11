@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'effect/base'
 require_relative 'effect/runner'
 module CombatEngine
