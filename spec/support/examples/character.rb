@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Examples
   # A simple user character
   class Character

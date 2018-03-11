@@ -1,4 +1,11 @@
 # frozen_string_literal: true
+require_relative 'character/attribute'
+require_relative 'character/damage_machine'
+require_relative 'character/delta_modifier'
+require_relative 'character/facade'
+require_relative 'character/healing_machine'
+require_relative 'character/modifier'
+require_relative 'character/state'
 
 module CombatEngine
   # Main integration point for characters.

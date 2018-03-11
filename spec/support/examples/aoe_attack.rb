@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 module Examples
   # A simple action to demo healing
   class AoeAttack < CombatEngine::Action::MultipleTarget

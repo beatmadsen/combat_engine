@@ -47,6 +47,10 @@ module CombatEngine
         Battle.lookup(character: self)
       end
 
+      def battle_allies
+        batlle&.allies(self).to_a
+      end
+
       # TODO: this logic seems to belong elsewhere
       def damage(attribute:, amount:)
         options = { attribute: attribute, amount: amount }

@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 RSpec.describe CombatEngine::Battle do
   describe '.update' do
     before do
@@ -79,7 +78,23 @@ RSpec.describe CombatEngine::Battle do
       # NB: since players can join battle later, their side needs to
       # be evaluated according to same rules
       context 'when some team members are in parties' do
-        xit 'adds team members along with their parties on same side' do
+        let(:party_members) { characters.take(3) }
+        before do
+          CombatEngine::Party.create_or_join(members: party_members)
+        end
+        let(:first_guy) { party_members.first }
+
+        it 'lets the party dictate which team they fight on' do
+          expect do
+            described_class.start_or_join(participants: characters)
+          end.to(
+            change { first_guy.battle_allies }
+              .from(nil)
+              .to(party_members - [first_guy])
+          )
+        end
+
+        xit '8.4' do
           raise 'no'
         end
       end

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module CombatEngine
-  # Effect module contains effect implementations and supporting classes
   module Effect
     # Base should be subclassed to make custom actions
     class Base
