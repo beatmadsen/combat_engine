@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe CombatEngine::Character do
+  let(:player_one) { DemoCharacter.new }
+  let(:player_two) { DemoCharacter.new }
+
+
+
   E = Examples
   let(:character_unwrapped) { E::Character.new(team: :a, hp: 100) }
   let(:character) { character_unwrapped.combat_facade }

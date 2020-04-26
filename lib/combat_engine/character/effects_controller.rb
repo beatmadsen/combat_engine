@@ -2,5 +2,7 @@
 
 module CombatEngine
   module Character
+    class EffectsController
+    end
   end
 end
