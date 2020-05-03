@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe CombatEngine::Character do
-  subject { DemoCharacter.new }
+
+  let(:start_hp) { 100 }
+  subject { DemoCharacter.new(start_hp) }
   let(:player_two) { DemoCharacter.new }
 
   context 'when player 2 attacks subject to deal instant damage' do
