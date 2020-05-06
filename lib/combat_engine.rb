@@ -10,4 +10,12 @@ require 'securerandom'
 
 # CombatEngine does bla TODO
 module CombatEngine
+  class Error < StandardError
+  end
+
+  class ImplementationError < Error
+    def initialize(msg="Method must be implemented")
+      super
+    end
+  end
 end

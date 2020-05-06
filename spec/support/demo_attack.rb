@@ -1,8 +1,5 @@
-class DemoAttack
-  include CombatEngine::Action
-
-  def initialize(source, target)
-    @source = source
-    @target = target
+class DemoAttack < CombatEngine::Action
+  def execute
+    @target.register_effect(DemoInstantDamageEffect, @source)
   end
 end
