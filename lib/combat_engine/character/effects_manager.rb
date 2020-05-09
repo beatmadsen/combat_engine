@@ -3,13 +3,17 @@
 module CombatEngine
   module Character
     class EffectsManager
-      def add_effect(effect)
+      def initialize
+        @effects = []
       end
 
-      def cancel_effect(klass)
+      def activate(effect)
+        @effects << effect
+        effect.advance
       end
 
-      def advance_all(delta)
+      def advance_effects(𝜹t)
+        # TODO
       end
     end
   end
