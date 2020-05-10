@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CombatEngine
   class Action
     def initialize(source, target)
@@ -5,7 +7,8 @@ module CombatEngine
       @target = target
     end
 
-    def execute; raise ImplementationError; end
+    def execute
+      raise ImplementationError
+    end
   end
-
 end

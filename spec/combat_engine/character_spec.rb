@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe CombatEngine::Character do
-
   let(:start_hp) { 100 }
   subject { DemoCharacter.new(start_hp) }
   let(:player_two) { DemoCharacter.new }

@@ -1,5 +1,6 @@
-module CombatEngine
+# frozen_string_literal: true
 
+module CombatEngine
   class Effect
     def initialize(source_controllers, target_controllers)
       @source_controllers = source_controllers
@@ -15,9 +16,13 @@ module CombatEngine
       @state.completed?
     end
 
-    def after_activate; raise ImplementationError; end
-    
-    def t_max; raise ImplementationError; end
+    def after_activate
+      raise ImplementationError
+    end
+
+    def t_max
+      raise ImplementationError
+    end
   end
 
   module EffectState
@@ -27,7 +32,9 @@ module CombatEngine
         @t_elapsed = t_elapsed
       end
 
-      def completed?; false; end
+      def completed?
+        false
+      end
     end
 
     class Init < Base
@@ -46,7 +53,9 @@ module CombatEngine
     end
 
     class Completed < Base
-      def completed?; true; end
+      def completed?
+        true
+      end
     end
 
     class Activated < Base
@@ -60,5 +69,4 @@ module CombatEngine
       end
     end
   end
-
 end

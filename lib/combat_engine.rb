@@ -1,10 +1,8 @@
-
 # frozen_string_literal: true
 
-require "zeitwerk"
+require 'zeitwerk'
 loader = Zeitwerk::Loader.for_gem
 loader.setup # ready!
-
 
 require 'securerandom'
 
@@ -14,7 +12,7 @@ module CombatEngine
   end
 
   class ImplementationError < Error
-    def initialize(msg="Method must be implemented")
+    def initialize(msg = 'Method must be implemented')
       super
     end
   end

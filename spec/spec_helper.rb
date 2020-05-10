@@ -6,7 +6,7 @@ require 'byebug'
 
 Dir.glob(
   File.join(__dir__, 'support', '**', '*.rb')
-).each { |file| require file }
+).sort.each { |file| require file }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

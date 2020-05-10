@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module CombatEngine
-
   module Character
     attr_accessor :hp
 
@@ -28,7 +27,7 @@ module CombatEngine
     end
 
     def activate_effect(effect_class, source)
-      effect = effect_class.new(source.controllers, self.controllers)
+      effect = effect_class.new(source.controllers, controllers)
       effects_controller.activate(effect)
     end
 
