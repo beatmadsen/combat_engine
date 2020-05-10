@@ -13,7 +13,8 @@ module CombatEngine
       end
 
       def advance_effects(𝜹t)
-        # TODO
+        @effects.each { |e| e.advance(𝜹t) }
+        @effects.reject!(&:completed?)
       end
     end
   end

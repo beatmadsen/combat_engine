@@ -11,15 +11,23 @@ module CombatEngine
       @state = @state.advance(𝜹t)
     end
 
+    def completed?
+      @state.completed?
+    end
+
     def after_activate; raise ImplementationError; end
+    
+    def t_max; raise ImplementationError; end
   end
 
   module EffectState
     class Base
-      def initialize(effect, t)
+      def initialize(effect, t_elapsed)
         @effect = effect
-        @t = t
+        @t_elapsed = t_elapsed
       end
+
+      def completed?; false; end
     end
 
     class Init < Base
@@ -29,11 +37,27 @@ module CombatEngine
 
       def advance(𝜹t)
         @effect.after_activate
-        Activated.new(@effect, @t)
+        if @effect.t_max.zero?
+          Completed.new(@effect, 𝜹t)
+        else
+          Activated.new(@effect, 𝜹t)
+        end
       end
     end
 
+    class Completed < Base
+      def completed?; true; end
+    end
+
     class Activated < Base
+      def advance(𝜹t)
+        @t_elapsed += 𝜹t
+        if @t_elapsed >= @effect.tmax
+          Completed.new(@effect, @t_elapsed)
+        else
+          self
+        end
+      end
     end
   end
 
